@@ -1,86 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD - AGENCIA DE EMPLEO</title>
-    <link rel="icon" type="image/svg+xml" href="power-bi.svg">
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: url('https://raw.githubusercontent.com/Kikelong/siteagency/main/backpicture.jpg') no-repeat center center/cover;
-        }
-        #bloqueo, #contenido {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        }
-        #bloqueo {
-            display: block;
-        }
-        #contenido {
-            display: none;
-        }
-        input, button {
-            margin-top: 10px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            background: #007BFF;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AGENCIA DE EMPLEO - MENÚ</title>
+  <link rel="icon" type="image/svg+xml" href="power-bi.svg">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: url('https://raw.githubusercontent.com/Kikelong/siteagency/main/backpicture.jpg') no-repeat center center/cover;
+    }
+    .container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .card {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+      width: 280px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 1);
+    }
+    .card h2 {
+      margin-bottom: 15px;
+      font-size: 20px;
+      color: #333;
+    }
+    .card button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .card button:hover {
+      background: #0056b3;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="bloqueo">
-        <h2>DASHBOARD</h2>
-        <h2>AGENCIA DE EMPLEO COMFENALCO</h2>
-        <p>___________________________</p>
-        <h2>🔒 Acceso restringido</h2>
-        <p>Ingresa la contraseña para acceder</p>
-        <input type="password" id="clave" placeholder="Contraseña" oninput="verificar()">
-        <button onclick="verificar()">Ingresar</button>
+  <div class="container">
+    <!-- Card Dashboard -->
+    <div class="card">
+      <h2>📊 DASHBOARD <br> AGENCIA DE EMPLEO</h2>
+      <button onclick="window.location.href='dashboard.html'">Entrar</button>
     </div>
 
-    <div id="contenido">
-        <h1></h1>
-        <button onclick="salir()">Salir</button>
-        <iframe title="ORIENTACION LABORAL" width="1800" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNzQ2MTE2OTMtNjQ3YS00NzE5LWI1Y2YtZTI2YjIxMGI1ZWViIiwidCI6ImQ2MDFlZjcxLTlkMTQtNGJhOC04NTc3LTA4YzkxMTYzNGM0MyIsImMiOjR9&pageName=8d30e90840237e232c1d" frameborder="0" allowFullScreen="true"></iframe>
-        <br>
+    <!-- Card Protocolo -->
+    <div class="card">
+      <h2>📄 PROTOCOLO DE ATENCIÓN <br> FRONT</h2>
+      <button onclick="window.location.href='protocoloatencion.html'">Entrar</button>
     </div>
-
-    <script>
-        function verificar() {
-            var claveIngresada = document.getElementById("clave").value;
-            var claveCorrecta = atob("MjAyNQ=="); 
-
-            if (claveIngresada === claveCorrecta) {
-                document.getElementById("contenido").style.display = "block";
-                document.getElementById("bloqueo").style.display = "none";
-            }
-        }
-
-        function salir() {
-            document.getElementById("contenido").style.display = "none";
-            document.getElementById("bloqueo").style.display = "block";
-            document.getElementById("clave").value = ""; // Borra la clave ingresada
-        }
-    </script>
+  </div>
 
 </body>
 </html>
