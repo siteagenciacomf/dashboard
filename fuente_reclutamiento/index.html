@@ -21,9 +21,9 @@
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+<body class="p-4 md:p-6 lg:p-8">
+    <div class="max-w-screen-2xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">Panel de Reclutamiento</h1>
                 <p class="text-sm text-gray-500">Consulta y Seguimiento de Candidatos</p>
@@ -41,21 +41,49 @@
 
         <div class="glass rounded-3xl shadow-xl overflow-hidden border border-white">
             <!-- FILTROS -->
-            <div class="p-6 border-b border-gray-100 flex flex-wrap gap-3">
-                <input type="text" id="search-input" onkeyup="applyFilters()" placeholder="Buscar en todas las columnas..." class="flex-1 min-w-[240px] p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
+            <div class="p-6 border-b border-gray-100 flex flex-wrap gap-3 items-end">
+                <input type="text" id="search-input" oninput="applyFilters()" placeholder="Búsqueda general..." class="flex-1 min-w-[240px] p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
 
-                <div id="edad-filter-container" class="hidden">
-                    <input type="text" id="edad-filter" onkeyup="applyFilters()" placeholder="Edad (25 o 20-35)" class="w-40 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
-                </div>
+                <input type="text" id="edad-filter" oninput="applyFilters()" placeholder="Edad (25 o 20-35)" class="w-36 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="EDAD">
 
-                <input type="text" id="gestion-filter" onkeyup="applyFilters()" placeholder="Filtrar por Gestión" class="w-48 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
+                <select id="genero-filter" onchange="applyFilters()" class="w-44 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="GENERO">
+                    <option value="">Todos los géneros</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro / No binario</option>
+                </select>
+
+                <input type="text" id="gestion-filter" oninput="applyFilters()" placeholder="Filtrar por Gestión" class="w-48 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="GESTION">
+
+                <!-- Filtros adicionales por hoja -->
+                <input type="text" id="anio-filter" oninput="applyFilters()" placeholder="Año" class="w-28 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
+
+                <input type="text" id="nivel-escolar-filter" oninput="applyFilters()" placeholder="Nivel Escolaridad" class="w-48 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS PROYECTOS - JAC RETIRADOS CON CREDITO">
+
+                <input type="text" id="cargo-filter" oninput="applyFilters()" placeholder="Cargo Estandarizado" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
+
+                <select id="rango-exp-filter" onchange="applyFilters()" class="w-64 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
+                    <option value="">Todos los rangos de exp.</option>
+                    <option value="MENOS DE 1 AÑO">MENOS DE 1 AÑO</option>
+                    <option value="DE 1 A 2 AÑOS">DE 1 A 2 AÑOS</option>
+                    <option value="DE 2 A 3 AÑOS">DE 2 A 3 AÑOS</option>
+                    <option value="DE 3 A 6 AÑOS">DE 3 A 6 AÑOS</option>
+                    <option value="DE 6 A 11 AÑOS">DE 6 A 11 AÑOS</option>
+                    <option value="DE 11 A 16 AÑOS">DE 11 A 16 AÑOS</option>
+                    <option value="DE 16 A 20 AÑOS">DE 16 A 20 AÑOS</option>
+                    <option value="MAS DE 20 AÑOS">MAS DE 20 AÑOS</option>
+                    <option value="MÁS DE 20 AÑOS">MÁS DE 20 AÑOS</option>
+                    <option value="SIN INFORMACIÓN">SIN INFORMACIÓN</option>
+                </select>
+
+                <input type="text" id="tiempo-ult-empleo-filter" oninput="applyFilters()" placeholder="Tiempo último empleo" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="PROYECTOS - JAC">
 
                 <button onclick="loadTable()" class="bg-indigo-600 text-white px-6 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all whitespace-nowrap">🔄 Actualizar</button>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead id="table-head" class="bg-gray-50 text-[11px] uppercase text-gray-400 font-bold italic"></thead>
+                <table class="w-full text-left border-collapse min-w-[1400px]">
+                    <thead id="table-head" class="bg-gray-50 text-[11px] uppercase text-gray-400 font-bold italic sticky top-0 z-10"></thead>
                     <tbody id="table-body" class="text-sm divide-y divide-gray-50"></tbody>
                 </table>
             </div>
@@ -63,66 +91,56 @@
     </div>
 
     <script>
-        // ────────────────────────────────────────────────
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzKRUboZX7ajwxJbFRW3QqIh9raYs8hlpnVNOpbdIa0FZI2T3TNAi89O1DGIRWqFMF_/exec";
-        // ────────────────────────────────────────────────
 
         let cacheData = [];
         let currentConfig = {};
 
-        // CONFIGURACIÓN EXACTA POR HOJA (columnas en el orden que pediste)
         const sheetConfigs = {
-            "CESANTES ATENDIDOS": {
-                columns: ["AÑO","EDAD","GENERO","TIPO DE DOCUMENTO","DOCUMENTO","PRIMER_APELLIDO","SGDO_APELLIDO","PRIMER_NOMBRE","CELULAR","CELULAR 2","CORREO ELECTRONICO","MUNICIPIO","NIVEL DE ESCOLARIDAD","ESTUDIOS REALIZADOS","EMPRESA EN QUE LABORO","CARGO ESTANDARIZADO","RANGO DE TIEMPO DE EXPERIENCIA","PERFIL LABORAL","GESTION"],
-                idKey: "DOCUMENTO"
-            },
-            "BANCO DE OFERENTES EN FRONT": {
-                columns: ["IDENTIFICACIÓN","NOMBRE Y APELLIDOS","GENERO","NIVEL ACADEMICO","BANCO DE OFERENTES - PERFIL LABORAL","OBSERVACION","GESTION"],
-                idKey: "IDENTIFICACIÓN"
-            },
-            "PROYECTOS - JAC": {
-                columns: ["JAC","TIPO DE DOCUMENTO","DOCUMENTO","NOMBRE COMPLETO","GÉNERO","EDAD","CELULAR","CELULAR 2","CORREO ELECTRÓNICO","NIVEL DE ESCOLARIDAD","ESTUDIO REALIZADO","EMPRESA EN QUE LABORÓ","CARGO DESEMPEÑADO","TIEMPO LABORADO ÚLTIMO EMPLEO","PERFIL OCUPACIONAL","GESTION"],
-                idKey: "DOCUMENTO"
-            },
-            "RETIRADOS CON CREDITO": {
-                columns: ["CEDULA","NOMBRE","CELULAR","CORREO ELECTRONICO","NIVEL DE ESCOLARIDAD","ESTUDIOS REALIZADOS","INSTITUCION","EMPRESA EN QUE LABORO","CARGO ESTANDARIZADO","AÑOS DE EXPERIENCIA(ULTIMO EMPLEO)","OBSERVACIONES","GESTION"],
-                idKey: "CEDULA"
-            }
+            "CESANTES ATENDIDOS": { columns: ["AÑO","EDAD","GENERO","TIPO DE DOCUMENTO","DOCUMENTO","PRIMER_APELLIDO","SGDO_APELLIDO","PRIMER_NOMBRE","CELULAR","CELULAR 2","CORREO ELECTRONICO","MUNICIPIO","NIVEL DE ESCOLARIDAD","ESTUDIOS REALIZADOS","EMPRESA EN QUE LABORO","CARGO ESTANDARIZADO","RANGO DE TIEMPO DE EXPERIENCIA","PERFIL LABORAL","GESTION"], idKey: "DOCUMENTO" },
+            "BANCO DE OFERENTES EN FRONT": { columns: ["IDENTIFICACIÓN","NOMBRE Y APELLIDOS","GENERO","NIVEL ACADEMICO","BANCO DE OFERENTES - PERFIL LABORAL","OBSERVACION","GESTION"], idKey: "IDENTIFICACIÓN" },
+            "PROYECTOS - JAC": { columns: ["JAC","TIPO DE DOCUMENTO","DOCUMENTO","NOMBRE COMPLETO","GÉNERO","EDAD","CELULAR","CELULAR 2","CORREO ELECTRÓNICO","NIVEL DE ESCOLARIDAD","ESTUDIO REALIZADO","EMPRESA EN QUE LABORÓ","CARGO DESEMPEÑADO","TIEMPO LABORADO ÚLTIMO EMPLEO","PERFIL OCUPACIONAL","GESTION"], idKey: "DOCUMENTO" },
+            "RETIRADOS CON CREDITO": { columns: ["CEDULA","NOMBRE","CELULAR","CORREO ELECTRONICO","NIVEL DE ESCOLARIDAD","ESTUDIOS REALIZADOS","INSTITUCION","EMPRESA EN QUE LABORO","CARGO ESTANDARIZADO","AÑOS DE EXPERIENCIA(ULTIMO EMPLEO)","OBSERVACIONES","GESTION"], idKey: "CEDULA" }
         };
+
+        const responsables = [
+            "Anuar David Muñoz Muñoz", "Adrián Nuñez Taharon", "Adriana Paola Essalas Anaya", "Adriana Lucía Martínez Peluffo",
+            "Carmen Cecilia Canoles Colón", "Carlos Andrés Ruiz Campo", "Diany Alejandra Rodríguez Morelos", "Erik Enrique Lara Tovar",
+            "Gabriel José De La Ossa Rey", "Gina Paola Romero Ballestas", "Henry De Jesús Peralta Luna", "Jared De Jesús Gómez Rivera",
+            "Jhelys Yerenia Fernández Brown", "Jonatan Alejandro Torres Enciso", "José David Lora Agresott", "Julissa Margarita Suárez González",
+            "Karina Paola Morales Torres", "Kevin Yezid Reyes Pinedo", "Kevin Andrés Villarreal Vivas", "Luis Alejandro Arroyo Machacón",
+            "Luisa Fernanda Ribón Martínez", "Maribel Bustamante Rojas", "Melissa Paola Guerrero Guerrero", "María del Rosario Quiñones Cerro",
+            "Natalia Marcela Marrugo García", "Olga Luz Polo Castellón", "Susana Isabel Sierra Montalvo", "Tameth Sayonara Guerrero Bassa",
+            "Vanessa Carolina Cabarcas Pacheco", "Wendy Carolina Castellón Figueroa", "Yennifer Calderón Watts", "Yohanna Patricia Estupiñán Dueñas",
+            "Adrián José Turizo Severiche", "Dania Dayana Jaraba Arenas", "Donna María Castelar Anaya", "Fabiola Inés Beltrán Torres",
+            "María Lucía Lara Hernández", "Raúl Andrés Nova Rocha", "Viviam Palis Prens"
+        ];
 
         async function loadTable() {
             const sheetName = document.getElementById('sheet-selector').value;
             currentConfig = sheetConfigs[sheetName];
-            const body = document.getElementById('table-body');
-            const head = document.getElementById('table-head');
-
-            // Skeleton
-            body.innerHTML = Array(6).fill(0).map(() => `<tr>${currentConfig.columns.map(() => `<td class="p-4"><div class="h-4 loading-skeleton rounded"></div></td>`).join('')}<td></td></tr>`).join('');
+            document.getElementById('table-body').innerHTML = Array(6).fill(0).map(() => `<tr>${currentConfig.columns.map(() => `<td class="p-4"><div class="h-4 loading-skeleton rounded w-full"></div></td>`).join('')}<td></td></tr>`).join('');
 
             try {
-                const response = await fetch(WEB_APP_URL, {
+                const res = await fetch(WEB_APP_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'getData', sheetName: sheetName })
+                    body: JSON.stringify({ action: 'getData', sheetName })
                 });
-                const res = await response.json();
+                const data = await res.json();
 
-                if (res.status === "success") {
-                    cacheData = res.data || [];
+                if (data.status === "success") {
+                    cacheData = data.data || [];
                     renderTableHead();
                     renderRows(cacheData);
-
-                    // Mostrar/ocultar filtro de EDAD
-                    const edadContainer = document.getElementById('edad-filter-container');
-                    edadContainer.classList.toggle('hidden', !currentConfig.columns.includes('EDAD'));
+                    updateFilterVisibility(sheetName);
                 }
             } catch (e) {
-                body.innerHTML = `<tr><td colspan="${currentConfig.columns.length + 1}" class="p-10 text-center text-red-600">Error al cargar datos</td></tr>`;
+                document.getElementById('table-body').innerHTML = `<tr><td colspan="${currentConfig.columns.length + 1}" class="p-10 text-center text-red-600">Error al cargar</td></tr>`;
             }
         }
 
         function renderTableHead() {
-            const head = document.getElementById('table-head');
-            head.innerHTML = `
+            document.getElementById('table-head').innerHTML = `
                 <tr>
                     ${currentConfig.columns.map(col => `<th class="p-4 whitespace-nowrap">${col}</th>`).join('')}
                     <th class="p-4 text-center">Acciones</th>
@@ -133,114 +151,167 @@
         function renderRows(data) {
             const body = document.getElementById('table-body');
             body.innerHTML = "";
+            const display = data.slice(0, 300);
 
-            const displayData = data.slice(0, 300);
-
-            displayData.forEach(item => {
+            display.forEach(item => {
                 const id = item[currentConfig.idKey] || "N/A";
-                let rowHTML = '';
+                let html = currentConfig.columns.map(col => {
+                    let val = item[col] || '-';
+                    if (col.toUpperCase().includes('GESTION')) val = val || '<span class="italic text-gray-400">Sin gestión</span>';
+                    return `<td class="p-3 text-xs text-gray-700 truncate max-w-xs">${val}</td>`;
+                }).join('');
 
-                currentConfig.columns.forEach(col => {
-                    let value = item[col] || '-';
-                    if (col === "GESTION") {
-                        value = value || '<span class="text-gray-400 italic">Sin gestión</span>';
-                    }
-                    rowHTML += `<td class="p-4 text-xs ${col.includes('GESTION') ? 'text-gray-500' : 'text-gray-700'}">${value}</td>`;
-                });
+                html += `<td class="p-3 text-center"><button onclick="abrirModalGestion('${id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-xl text-[10px] font-black shadow transition-all">GESTIONAR</button></td>`;
 
-                rowHTML += `
-                    <td class="p-4 text-center">
-                        <button onclick="abrirModalGestion('${id}')" class="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-xl text-[10px] font-black shadow transition-all">
-                            GESTIONAR
-                        </button>
-                    </td>
-                `;
-
-                const row = document.createElement('tr');
-                row.className = "hover:bg-indigo-50/50 transition-colors";
-                row.innerHTML = rowHTML;
-                body.appendChild(row);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-indigo-50/50 transition-colors";
+                tr.innerHTML = html;
+                body.appendChild(tr);
             });
 
             if (data.length > 300) {
-                const note = document.createElement('tr');
-                note.innerHTML = `<td colspan="${currentConfig.columns.length + 1}" class="p-3 text-center text-xs text-gray-500 italic">Mostrando 300 de ${data.length} registros • Usa los filtros</td>`;
-                body.appendChild(note);
+                body.innerHTML += `<tr><td colspan="${currentConfig.columns.length + 1}" class="p-3 text-center text-xs text-gray-500 italic">Mostrando 300 de ${data.length} • Usa filtros</td></tr>`;
             }
         }
 
-        function applyFilters() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
-            const edadTerm = document.getElementById('edad-filter').value.trim();
-            const gestionTerm = document.getElementById('gestion-filter').value.toLowerCase().trim();
+function updateFilterVisibility(sheetName) {
+    if (!sheetName) return;
 
+    // Normalizamos: quitar espacios extras, convertir a mayúsculas, quitar emojis/texto no deseado
+    const normalizedSheet = sheetName.trim().replace(/[^a-zA-Z0-9\s-]/g, '').toUpperCase();
+
+    console.log("Hoja normalizada para comparación:", normalizedSheet); // ← verás esto en consola
+
+    const filters = document.querySelectorAll('[data-sheet], [data-filter-for]');
+
+    filters.forEach(el => {
+        const sheetsStr = (el.getAttribute('data-sheet') || '').trim();
+        if (!sheetsStr) {
+            // Filtros globales (edad, genero, etc.)
+            if (el.dataset.filterFor) {
+                const col = el.dataset.filterFor.toUpperCase();
+                const visible = currentConfig.columns.some(c => c.toUpperCase().includes(col));
+                el.classList.toggle('hidden', !visible);
+            }
+            return;
+        }
+
+        // Filtros por hoja → normalizamos también los data-sheet
+        const allowedSheets = sheetsStr.split(/\s+/).map(s => 
+            s.trim().replace(/[^a-zA-Z0-9\s-]/g, '').toUpperCase()
+        );
+
+        const shouldShow = allowedSheets.includes(normalizedSheet) || allowedSheets.some(s => normalizedSheet.includes(s));
+
+        el.classList.toggle('hidden', !shouldShow);
+
+        // Log para depurar
+        console.log(`Filtro ${el.id || 'sin-id'}: data-sheet="${sheetsStr}", debería mostrar=${shouldShow}, hidden=${el.classList.contains('hidden')}`);
+    });
+}
+
+        function applyFilters() {
             let filtered = cacheData;
+            const sheet = document.getElementById('sheet-selector').value;
 
             // Búsqueda general
-            if (searchTerm) {
-                filtered = filtered.filter(item => 
-                    Object.values(item).some(v => String(v || "").toLowerCase().includes(searchTerm))
-                );
-            }
+            const search = document.getElementById('search-input').value.toLowerCase().trim();
+            if (search) filtered = filtered.filter(r => Object.values(r).some(v => String(v||'').toLowerCase().includes(search)));
 
-            // Filtro EDAD (soporta "25" o "20-35")
-            if (edadTerm) {
-                filtered = filtered.filter(item => {
-                    const edadStr = String(item["EDAD"] || "");
-                    if (!edadStr) return false;
-                    const edad = parseInt(edadStr);
-                    if (isNaN(edad)) return false;
-
-                    if (edadTerm.includes('-')) {
-                        const [min, max] = edadTerm.split('-').map(n => parseInt(n.trim()));
-                        return edad >= (min || 0) && edad <= (max || 999);
+            // Edad
+            const edad = document.getElementById('edad-filter').value.trim();
+            if (!document.getElementById('edad-filter').classList.contains('hidden') && edad) {
+                filtered = filtered.filter(r => {
+                    const e = parseInt(r["EDAD"] || 0);
+                    if (edad.includes('-')) {
+                        const [min, max] = edad.split('-').map(n => parseInt(n.trim()));
+                        return e >= (min||0) && e <= (max||999);
                     }
-                    return edadStr.includes(edadTerm);
+                    return String(e).includes(edad);
                 });
             }
 
-            // Filtro Gestión
-            if (gestionTerm) {
-                filtered = filtered.filter(item => 
-                    String(item["GESTION"] || "").toLowerCase().includes(gestionTerm)
-                );
+            // Género
+            const genero = document.getElementById('genero-filter').value;
+            if (!document.getElementById('genero-filter').classList.contains('hidden') && genero) {
+                filtered = filtered.filter(r => {
+                    const g = (r["GENERO"] || r["GÉNERO"] || "").toUpperCase().trim();
+                    if (genero === "M") return g.startsWith("M") || g.includes("MASCULINO");
+                    if (genero === "F") return g.startsWith("F") || g.includes("FEMENINO");
+                    if (genero === "O") return !["M","F","MASCULINO","FEMENINO"].some(v => g.includes(v));
+                    return true;
+                });
+            }
+
+            // Gestión
+            const gestion = document.getElementById('gestion-filter').value.toLowerCase().trim();
+            if (!document.getElementById('gestion-filter').classList.contains('hidden') && gestion) {
+                filtered = filtered.filter(r => String(r["GESTION"] || "").toLowerCase().includes(gestion));
+            }
+
+            // Filtros adicionales por hoja
+            if (sheet === "CESANTES ATENDIDOS") {
+                const anio = document.getElementById('anio-filter').value.trim();
+                if (anio) filtered = filtered.filter(r => String(r["AÑO"] || "").includes(anio));
+
+                const nivel = document.getElementById('nivel-escolar-filter').value.toLowerCase().trim();
+                if (nivel) filtered = filtered.filter(r => String(r["NIVEL DE ESCOLARIDAD"] || "").toLowerCase().includes(nivel));
+
+                const cargo = document.getElementById('cargo-filter').value.toLowerCase().trim();
+                if (cargo) filtered = filtered.filter(r => String(r["CARGO ESTANDARIZADO"] || "").toLowerCase().includes(cargo));
+
+                const rango = document.getElementById('rango-exp-filter').value;
+                if (rango) filtered = filtered.filter(r => (r["RANGO DE TIEMPO DE EXPERIENCIA"] || "") === rango);
+            }
+
+            if (sheet === "PROYECTOS - JAC") {
+                const nivel = document.getElementById('nivel-escolar-filter').value.toLowerCase().trim();
+                if (nivel) filtered = filtered.filter(r => String(r["NIVEL DE ESCOLARIDAD"] || "").toLowerCase().includes(nivel));
+
+                const tiempo = document.getElementById('tiempo-ult-empleo-filter').value.toLowerCase().trim();
+                if (tiempo) filtered = filtered.filter(r => String(r["TIEMPO LABORADO ÚLTIMO EMPLEO"] || "").toLowerCase().includes(tiempo));
+            }
+
+            if (sheet === "RETIRADOS CON CREDITO") {
+                const nivel = document.getElementById('nivel-escolar-filter').value.toLowerCase().trim();
+                if (nivel) filtered = filtered.filter(r => String(r["NIVEL DE ESCOLARIDAD"] || "").toLowerCase().includes(nivel));
             }
 
             renderRows(filtered);
         }
 
-        // MODAL MEJORADO (sin DESCARTADO + Código de Vacante)
         async function abrirModalGestion(idCandidato) {
             const { value: tipo } = await Swal.fire({
                 title: 'Tipo de Gestión',
                 input: 'select',
-                inputOptions: {
-                    'POSTULACIÓN': '✅ POSTULACIÓN',
-                    'REMISIÓN': '📤 REMISIÓN',
-                    'COLOCACIÓN': '🎉 COLOCACIÓN'
-                },
-                inputPlaceholder: 'Selecciona una opción',
+                inputOptions: { 'POSTULACIÓN': '✅ POSTULACIÓN', 'REMISIÓN': '📤 REMISIÓN', 'COLOCACIÓN': '🎉 COLOCACIÓN' },
                 showCancelButton: true,
                 confirmButtonColor: '#10b981'
             });
-
             if (!tipo) return;
 
-            // Segundo paso: Código de Vacante
             const { value: codigo } = await Swal.fire({
                 title: `Código de Vacante - ${tipo}`,
                 input: 'text',
-                inputPlaceholder: 'Ej: VAC-2026-045 o 12345',
+                inputPlaceholder: 'Ej: VAC-2026-045',
                 showCancelButton: true,
                 confirmButtonColor: '#10b981',
-                inputValidator: (value) => {
-                    if (!value) return '¡Debes ingresar el código de la vacante!';
-                }
+                inputValidator: v => !v && 'Ingresa el código'
             });
-
             if (!codigo) return;
 
+            const { value: responsable } = await Swal.fire({
+                title: '¿Quién realiza la gestión?',
+                input: 'select',
+                inputOptions: responsables.reduce((o, n) => { o[n] = n; return o; }, {}),
+                showCancelButton: true,
+                confirmButtonColor: '#10b981'
+            });
+            if (!responsable) return;
+
             Swal.fire({ title: 'Guardando...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            const text = `${tipo} - Vacante: ${codigo} (${new Date().toLocaleDateString('es-CO')}) - Por: ${responsable}`;
 
             try {
                 const res = await fetch(WEB_APP_URL, {
@@ -249,21 +320,22 @@
                         action: 'saveGestion',
                         sheetName: document.getElementById('sheet-selector').value,
                         id: idCandidato,
-                        nuevaGestion: `${tipo} - Vacante: ${codigo} (${new Date().toLocaleDateString('es-CO')})`
+                        nuevaGestion: text
                     })
                 });
-
                 const result = await res.json();
                 if (result.status === "success") {
-                    Swal.fire('¡Guardado!', 'Gestión y código de vacante registrados', 'success');
+                    Swal.fire('Guardado', '', 'success');
                     loadTable();
                 }
-            } catch (err) {
+            } catch {
                 Swal.fire('Error', 'No se pudo guardar', 'error');
             }
         }
 
         window.onload = loadTable;
+
+
     </script>
 </body>
 </html>
