@@ -1,1 +1,134 @@
-hola mundo
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Reclutamiento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #f4f7fa; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .spinner { 
+            animation: spin 1s linear infinite; border: 2px solid transparent; 
+            border-top-color: #4f46e5; border-radius: 50%; width: 20px; height: 20px; 
+            display: inline-block; 
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Panel de Reclutamiento</h1>
+                <p class="text-sm text-gray-500">Consulta y Seguimiento de Candidatos</p>
+            </div>
+            
+            <div class="w-full md:w-80">
+                <label class="block text-[10px] font-bold text-indigo-500 uppercase mb-1">Fuente de Datos:</label>
+                <select id="sheet-selector" onchange="loadTable()" class="w-full p-3 rounded-xl border-none shadow-sm font-semibold text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <option value="CESANTES ATENDIDOS">📍 CESANTES ATENDIDOS</option>
+                    <option value="BANCO DE OFERENTES EN FRONT">🏢 BANCO DE OFERENTES EN FRONT</option>
+                    <option value="PROYECTOS - JAC">🏗️ PROYECTOS - JAC</option>
+                    <option value="RETIRADOS CON CREDITO">💳 RETIRADOS CON CREDITO</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="glass rounded-3xl shadow-xl overflow-hidden border border-white">
+            <div class="p-6 border-b border-gray-100 flex gap-4">
+                <input type="text" id="search-input" onkeyup="filterTable()" placeholder="Buscar por nombre o documento..." class="flex-1 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
+                <button onclick="loadTable()" class="bg-indigo-600 text-white px-6 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all">🔄 Actualizar</button>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-[11px] uppercase text-gray-400 font-bold italic">
+                            <th class="p-4">Identificación</th>
+                            <th class="p-4">Nombre Completo</th>
+                            <th class="p-4">Perfil / Cargo</th>
+                            <th class="p-4 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="text-sm divide-y divide-gray-50">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT
+        const WEB_APP_URL = "TU_URL_DE_APPS_SCRIPT_AQUI";
+
+        async function loadTable() {
+            const sheetName = document.getElementById('sheet-selector').value;
+            const body = document.getElementById('table-body');
+            body.innerHTML = `<tr><td colspan="4" class="p-10 text-center"><span class="spinner"></span> Cargando base de datos...</td></tr>`;
+
+            try {
+                const response = await fetch(WEB_APP_URL, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ action: 'getData', sheetName: sheetName }) 
+                });
+                const res = await response.json();
+
+                if (res.status === "success") {
+                    window.currentData = res.data; // Guardar para búsqueda local
+                    renderRows(res.data);
+                }
+            } catch (e) {
+                body.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-red-500 font-bold">Error: No se pudo conectar con el servidor.</td></tr>`;
+            }
+        }
+
+        function renderRows(data) {
+            const body = document.getElementById('table-body');
+            body.innerHTML = "";
+            
+            data.forEach(item => {
+                // Mapeo dinámico porque los nombres de columnas varían entre hojas
+                const id = item["DOCUMENTO"] || item["IDENTIFICACIÓN"] || item["CEDULA"] || item["DOCUMENTO "];
+                const nombre = item["NOMBRE COMPLETO"] || item["NOMBRE"] || (item["PRIMER_NOMBRE"] + " " + item["PRIMER_APELLIDO"]);
+                const perfil = item["PERFIL LABORAL"] || item["CARGO ESTANDARIZADO"] || item["PERFIL OCUPACIONAL"] || "No registrado";
+
+                const row = document.createElement('tr');
+                row.className = "hover:bg-indigo-50/30 transition-colors";
+                row.innerHTML = `
+                    <td class="p-4 font-mono text-xs text-gray-500">${id}</td>
+                    <td class="p-4 font-semibold text-gray-800">${nombre}</td>
+                    <td class="p-4 text-gray-600 text-xs">${perfil}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="verDetalle('${id}')" class="bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg text-[10px] font-bold hover:bg-indigo-200">GESTIONAR</button>
+                    </td>
+                `;
+                body.appendChild(row);
+            });
+        }
+
+        function filterTable() {
+            const term = document.getElementById('search-input').value.toLowerCase();
+            const filtered = window.currentData.filter(item => {
+                const searchString = Object.values(item).join(" ").toLowerCase();
+                return searchString.includes(term);
+            });
+            renderRows(filtered);
+        }
+
+        function verDetalle(id) {
+            Swal.fire({
+                title: 'Gestión de Candidato',
+                text: 'Aquí se abrirá el formulario para editar las 19 columnas de seguimiento del ID: ' + id,
+                icon: 'info',
+                confirmButtonColor: '#4f46e5'
+            });
+        }
+
+        window.onload = loadTable;
+    </script>
+</body>
+</html>
