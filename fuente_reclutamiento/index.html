@@ -100,6 +100,11 @@
                 <div id="loading-bar" class="bg-indigo-500 h-full w-0 transition-all duration-[120000ms] ease-linear"></div>
             </div>
         </div>
+        <br>
+                                    <button onclick="cerrarSesion()" 
+                                style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
+                                Cambiar usuario
+                            </button>
     </div>
 
 
@@ -303,6 +308,26 @@
                 `<tr>${currentConfig.columns.map(() => `<td class="p-4"><div class="h-4 loading-skeleton rounded w-full"></div></td>`).join('')}<td></td></tr>`
             ).join('');
 
+            const msgLabel = document.getElementById('loading-msg');
+            const mensajes = [
+                "Conectando con SharePoint...",
+                "Extrayendo miles de registros...",
+                "Ya casi, no te desesperes...",
+                "Casi listo, preparando vista..."
+            ];
+            
+            let i = 0;
+            const intervalMsg = setInterval(() => {
+                if(i < mensajes.length) {
+                    msgLabel.innerText = mensajes[i];
+                    i++;
+                }
+            }, 25000); // Cambia el mensaje cada 25 segundos
+
+
+
+
+
             try {
                 const res = await fetch(WEB_APP_URL, {
                     method: 'POST',
@@ -312,6 +337,17 @@
 
                 if (data.status === "success") {
                     cacheData = data.data || [];
+                    // --- NUEVA LÓGICA DE ORDENAMIENTO ---
+                    if (sheetName === "CESANTES ATENDIDOS") {
+                        cacheData.sort((a, b) => {
+                            // Ordenamos por AÑO de mayor a menor (Descendente)
+                            // Usamos Number() para asegurarnos que trate el año como número
+                            const añoA = Number(a["AÑO"]) || 0;
+                            const añoB = Number(b["AÑO"]) || 0;
+                            return añoB - añoA; 
+                        });
+                    }
+                    // ------------------------------------
                     renderTableHead();
                     renderRows(cacheData);
                     updateFilterVisibility(sheetName);
@@ -320,6 +356,9 @@
                 console.error(e);
                 document.getElementById('table-body').innerHTML = `<tr><td colspan="${currentConfig.columns.length + 1}" class="p-10 text-center text-red-600">Error de conexión</td></tr>`;
             } finally {
+                // --- AGREGAMOS ESTA LÍNEA AQUÍ ---
+                clearInterval(intervalMsg); 
+                // ---------------------------------
                 // 2. Ocultar el Loading cuando la respuesta llegue
                 // Independientemente de si tardó 30 segundos o 2 minutos.
                 overlay.classList.add('hidden');
@@ -690,4 +729,5 @@
     </script>
 </body>
 </html>
+
 
