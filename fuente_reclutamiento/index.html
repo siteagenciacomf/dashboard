@@ -118,7 +118,7 @@
             <h3 class="text-white text-xl font-bold mb-2">Sincronizando Base de Datos</h3>
             <p id="loading-msg" class="text-indigo-100 text-sm animate-pulse">Esto puede tomar hasta 2 minutos debido al volumen de datos...</p>
             <div class="mt-4 w-64 bg-slate-700 rounded-full h-1.5 mx-auto overflow-hidden">
-                <div id="loading-bar" class="bg-indigo-500 h-full w-0 transition-all duration-[120000ms] ease-linear"></div>
+                <div id="loading-bar" class="bg-indigo-500 h-full w-0 transition-all duration-[90000ms] ease-linear"></div>
             </div>
         </div>
         <br>
@@ -404,7 +404,13 @@
                             <input type="text" id="tiempo-ult-empleo-filter" oninput="applyFilters()" placeholder="Tiempo último empleo" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="PROYECTOS - JAC">
                             <input type="text" id="cargo-filter" oninput="applyFilters()" placeholder="Cargo Estandarizado" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
                             <input type="text" id="gestion-filter" oninput="applyFilters()" placeholder="Filtrar por Gestión" class="w-48 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="GESTION">
-
+                            <button onclick="borrarFiltros()" 
+                                class="bg-slate-200 text-slate-600 px-4 py-3 rounded-xl hover:bg-slate-300 transition flex items-center gap-2 text-sm font-semibold shadow-sm active:scale-95">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Limpiar
+                            </button>
                         <!--  <button onclick="loadTable()" class="bg-indigo-600 text-white px-6 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all whitespace-nowrap">🔄 Actualizar</button>-->
                         </div>
 
@@ -630,7 +636,7 @@
                 overlay.classList.remove('flex');
                 bar.style.transition = 'none'; // Resetear transición para la próxima vez
                 bar.style.width = '0%';
-                setTimeout(() => { bar.style.transition = 'width 60000ms linear'; }, 100);
+                setTimeout(() => { bar.style.transition = 'width 90000ms linear'; }, 100);
             }
         }
 
@@ -999,6 +1005,42 @@
                 auxGroup.innerHTML += `<option value="${p}">${p}</option>`;
             });
         }
+
+
+        function borrarFiltros() {
+            // 1. Limpiar inputs de texto y búsqueda
+            document.getElementById('search-input').value = '';
+            document.getElementById('anio-filter').value = '';
+            document.getElementById('edad-filter').value = '';
+            document.getElementById('tiempo-ult-empleo-filter').value = '';
+            document.getElementById('cargo-filter').value = '';
+            document.getElementById('gestion-filter').value = '';
+
+            // 2. Resetear selects
+            document.getElementById('genero-filter').value = '';
+
+            // 3. Desmarcar todos los checkboxes (Escolaridad y Experiencia)
+            const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+            allCheckboxes.forEach(cb => cb.checked = false);
+
+            // 4. Ejecutar el filtrado para mostrar todos los datos de nuevo
+            applyFilters();
+
+            // Opcional: Notificación visual rápida
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true
+            });
+            Toast.fire({
+                icon: 'success',
+                title: 'Filtros restaurados'
+            });
+        }
+
+
 
         // Nueva función para entrar desde el botón de la tarjeta
         function accesoDirecto() {
