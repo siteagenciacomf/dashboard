@@ -102,9 +102,9 @@
         </div>
         <br>
                                     <button onclick="cerrarSesion()" 
-                                style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
-                                Cambiar usuario
-                            </button>
+                                        style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
+                                        Cambiar Usuario
+                                    </button>
     </div>
 
 
@@ -118,25 +118,36 @@
                         <div>
                             <h1 class="text-2xl font-bold text-gray-800">Panel de Reclutamiento</h1>
                             <p class="text-sm text-gray-500">Consulta y Seguimiento de Candidatos</p>
+                            <span id="usuario-actual" style="font-size:12px; color:#475569;"></span>
                         </div>
                         <div class="w-full md:w-80">
                             <label class="block text-[10px] font-bold text-indigo-500 uppercase mb-1">Fuente de Datos:</label>
                             <select id="sheet-selector" onchange="loadTable()" class="w-full p-3 rounded-xl border-none shadow-sm font-semibold text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500">
                                 <option value="CESANTES ATENDIDOS">📍 CESANTES ATENDIDOS</option>
-                                <option value="BANCO DE OFERENTES EN FRONT">🏢 BANCO DE OFERENTES EN FRONT</option>
-                                <option value="PROYECTOS - JAC">🏗️ PROYECTOS - JAC</option>
-                                <option value="RETIRADOS CON CREDITO">💳 RETIRADOS CON CRÉDITO</option>
+                                <option value="BANCO DE OFERENTES EN FRONT">BANCO DE OFERENTES EN FRONT</option>
+                                <option value="PROYECTOS - JAC">PROYECTOS - JAC</option>
+                                <option value="RETIRADOS CON CREDITO">RETIRADOS CON CRÉDITO</option>
                             </select>
                         </div>
 
                         <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-bottom:10px;">
                             
                             <span id="usuario-actual" style="font-size:12px; color:#475569;"></span>
-
-                            <button onclick="cerrarSesion()" 
-                                style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
-                                Cambiar usuario
+                            <button onclick="actualizarDatos()"
+                                style="background:#6e6cdf; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
+                                Actualizar
                             </button>
+                            <button onclick="cerrarSesion()"
+                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-2">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15M18 12H9m0 0l3-3m-3 3l3 3"/>
+                            </svg>
+
+                            Salir
+                            </button>
+
 
                         </div>
                     </div>
@@ -144,7 +155,8 @@
                     <div class="glass rounded-3xl shadow-2xl overflow-hidden">
                         <!-- FILTROS -->
                         <div class="p-6 border-b border-gray-100 flex flex-wrap gap-3 items-end">
-                            <input type="text" id="search-input" oninput="applyFilters()" placeholder="Búsqueda general..." class="flex-1 min-w-[240px] p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
+                            <input type="text" id="search-input" oninput="applyFilters()" placeholder="Búsqueda general..." class="flex-1 min-w-[230px] p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
+                            <input type="text" id="anio-filter" oninput="applyFilters()" placeholder="Año Atención" class="w-28 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
 
                             <input type="text" id="edad-filter" oninput="applyFilters()" placeholder="Edad (25 o 20-35)" class="w-36 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="EDAD">
 
@@ -152,70 +164,146 @@
                                 <option value="">Todos los géneros</option>
                                 <option value="M">Masculino</option>
                                 <option value="F">Femenino</option>
-                                <option value="O">Otro / No binario</option>
+                                <option value="O">Otro</option>
                             </select>
 
-                            <input type="text" id="gestion-filter" oninput="applyFilters()" placeholder="Filtrar por Gestión" class="w-48 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="GESTION">
 
                             <!-- Filtros adicionales por hoja -->
-                            <input type="text" id="anio-filter" oninput="applyFilters()" placeholder="Año" class="w-28 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
 
-                            <select id="nivel-escolar-filter" onchange="applyFilters()"
-                            class="w-56 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden"
-                            data-sheet="CESANTES ATENDIDOS PROYECTOS - JAC RETIRADOS CON CREDITO">
 
-                            <option value="">Escolaridad (Todas)</option>
+                            <div id="nivel-escolar-filter-jac"
+                                class="relative w-72 hidden"
+                                data-sheet="PROYECTOS - JAC">
 
-                            <option value="SIN ESCOLARIDAD">SIN ESCOLARIDAD</option>
-                            <option value="ANALFABETA">ANALFABETA</option>
-                            <option value="PRIMARIA INCOMPLETA">PRIMARIA INCOMPLETA</option>
-                            <option value="PRIMARIA">PRIMARIA</option>
+                                <button type="button"
+                                    onclick="toggleDropdown('nivel-escolar-dropdown-jac')"
+                                    class="w-full p-3 bg-gray-50 rounded-xl outline-none text-sm text-left flex justify-between items-center">
+                                    Escolaridad
+                                    <span>▼</span>
+                                </button>
 
-                            <option value="BACHILLER INCOMPLETO">BACHILLER INCOMPLETO</option>
-                            <option value="BACHILLER">BACHILLER</option>
+                                <div id="nivel-escolar-dropdown-jac"
+                                    class="absolute z-50 bg-white border rounded-xl shadow-lg mt-1 w-[320px] max-h-72 overflow-y-auto hidden p-4 text-sm space-y-2">
 
-                            <option value="TÉCNICO EN CURSO">TÉCNICO EN CURSO</option>
-                            <option value="TÉCNICO">TÉCNICO</option>
+                                    <label class="flex items-center gap-2 font-semibold border-b pb-2 mb-2">
+                                    <input type="checkbox" id="check-todos-escolaridad-jac" onchange="toggleAllEscolaridadJac(this)">
+                                    Seleccionar todo
+                                    </label>
 
-                            <option value="TECNÓLOGO EN CURSO">TECNÓLOGO EN CURSO</option>
-                            <option value="TECNÓLOGO">TECNÓLOGO</option>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Preescolar" onchange="applyFilters()"> Preescolar</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Básica Primaria (1-5)" onchange="applyFilters()"> Básica Primaria (1-5)</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Básica Secundaria (6-9)" onchange="applyFilters()"> Básica Secundaria (6-9)</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Media (10-13)" onchange="applyFilters()"> Media (10-13)</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Técnica Laboral" onchange="applyFilters()"> Técnica Laboral</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Técnica Profesional" onchange="applyFilters()"> Técnica Profesional</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Tecnológica" onchange="applyFilters()"> Tecnológica</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Universitaria" onchange="applyFilters()"> Universitaria</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Especialización" onchange="applyFilters()"> Especialización</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Maestría" onchange="applyFilters()"> Maestría</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="Doctorado" onchange="applyFilters()"> Doctorado</label>
+                                </div>
+                            </div>
 
-                            <option value="PROFESIONAL EN CURSO">PROFESIONAL EN CURSO</option>
-                            <option value="PROFESIONAL">PROFESIONAL</option>
 
-                            <option value="ESPECIALISTA">ESPECIALISTA</option>
-                            <option value="MAESTRIA">MAESTRIA</option>
-                            <option value="DOCTORADO">DOCTORADO</option>
 
-                            <option value="BACHILLER EN EL EXTERIOR SIN HOMOLOGAR">BACHILLER EN EL EXTERIOR SIN HOMOLOGAR</option>
-                            <option value="BACHILLER EN EL EXTERIOR HOMOLOGADO">BACHILLER EN EL EXTERIOR HOMOLOGADO</option>
 
-                            <option value="PROFESIONAL EN EL EXTERIOR SIN HOMOLOGAR">PROFESIONAL EN EL EXTERIOR SIN HOMOLOGAR</option>
-                            <option value="PROFESIONAL EN EL EXTERIOR HOMOLOGADO">PROFESIONAL EN EL EXTERIOR HOMOLOGADO</option>
+                            <div id="nivel-escolar-filter"
+                                class="relative w-72 hidden"
+                                data-sheet="CESANTES ATENDIDOS RETIRADOS CON CREDITO">
 
-                            </select>
+                                <!-- Botón -->
+                                <button type="button"
+                                    onclick="toggleDropdown('nivel-escolar-dropdown')"
+                                    class="w-full p-3 bg-gray-50 rounded-xl outline-none text-sm text-left flex justify-between items-center">
+                                    Escolaridad
+                                    <span>▼</span>
+                                </button>
+
+                                <!-- Dropdown -->
+                                <div id="nivel-escolar-dropdown"
+                                    class="absolute z-50 bg-white border rounded-xl shadow-lg mt-1 w-[380px] max-h-72 overflow-y-auto hidden p-4 text-sm space-y-2">
+
+                                    <!-- Seleccionar todo -->
+                                    <label class="flex items-center gap-2 font-semibold border-b pb-2 mb-2">
+                                        <input type="checkbox" id="check-todos-escolaridad" onchange="toggleAllEscolaridad(this)">
+                                        Seleccionar todo
+                                    </label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="SIN ESCOLARIDAD" onchange="applyFilters()"> SIN ESCOLARIDAD</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="ANALFABETA" onchange="applyFilters()"> ANALFABETA</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="PRIMARIA INCOMPLETA" onchange="applyFilters()"> PRIMARIA INCOMPLETA</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="PRIMARIA" onchange="applyFilters()"> PRIMARIA</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="BACHILLER INCOMPLETO" onchange="applyFilters()"> BACHILLER INCOMPLETO</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="BACHILLER" onchange="applyFilters()"> BACHILLER</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="TÉCNICO EN CURSO" onchange="applyFilters()"> TÉCNICO EN CURSO</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="TÉCNICO" onchange="applyFilters()"> TÉCNICO</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="TECNÓLOGO EN CURSO" onchange="applyFilters()"> TECNÓLOGO EN CURSO</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="TECNÓLOGO" onchange="applyFilters()"> TECNÓLOGO</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="PROFESIONAL EN CURSO" onchange="applyFilters()"> PROFESIONAL EN CURSO</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="PROFESIONAL" onchange="applyFilters()"> PROFESIONAL</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="ESPECIALISTA" onchange="applyFilters()"> ESPECIALISTA</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="MAESTRIA" onchange="applyFilters()"> MAESTRIA</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DOCTORADO" onchange="applyFilters()"> DOCTORADO</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="BACHILLER EN EL EXTERIOR SIN HOMOLOGAR" onchange="applyFilters()"> BACHILLER EN EL EXTERIOR SIN HOMOLOGAR</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="BACHILLER EN EL EXTERIOR HOMOLOGADO" onchange="applyFilters()"> BACHILLER EN EL EXTERIOR HOMOLOGADO</label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="PROFESIONAL EN EL EXTERIOR SIN HOMOLOGAR" onchange="applyFilters()"> PROFESIONAL EN EL EXTERIOR SIN HOMOLOGAR</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="PROFESIONAL EN EL EXTERIOR HOMOLOGADO" onchange="applyFilters()"> PROFESIONAL EN EL EXTERIOR HOMOLOGADO</label>
+
+                                </div>
+                            </div>
+
                             
 
 
 
 
-                            <input type="text" id="cargo-filter" oninput="applyFilters()" placeholder="Cargo Estandarizado" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
 
-                            <select id="rango-exp-filter" onchange="applyFilters()" class="w-64 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
-                                <option value="">Todos los rangos de exp.</option>
-                                <option value="MENOS DE 1 AÑO">MENOS DE 1 AÑO</option>
-                                <option value="DE 1 A 2 AÑOS">DE 1 A 2 AÑOS</option>
-                                <option value="DE 2 A 3 AÑOS">DE 2 A 3 AÑOS</option>
-                                <option value="DE 3 A 6 AÑOS">DE 3 A 6 AÑOS</option>
-                                <option value="DE 6 A 11 AÑOS">DE 6 A 11 AÑOS</option>
-                                <option value="DE 11 A 16 AÑOS">DE 11 A 16 AÑOS</option>
-                                <option value="DE 16 A 20 AÑOS">DE 16 A 20 AÑOS</option>
-                                <option value="MAS DE 20 AÑOS">MAS DE 20 AÑOS</option>
-                                <option value="MÁS DE 20 AÑOS">MÁS DE 20 AÑOS</option>
-                                <option value="SIN INFORMACIÓN">SIN INFORMACIÓN</option>
-                            </select>
+                            <div id="rango-exp-filter"
+                                class="relative w-72 hidden"
+                                data-sheet="CESANTES ATENDIDOS">
+
+                                <!-- Botón -->
+                                <button type="button"
+                                    onclick="toggleDropdown('rango-exp-dropdown')"
+                                    class="w-full p-3 bg-gray-50 rounded-xl outline-none text-sm text-left flex justify-between items-center">
+                                    Rango de Experiencia
+                                    <span>▼</span>
+                                </button>
+
+                                <!-- Dropdown -->
+                                <div id="rango-exp-dropdown"
+                                    class="absolute z-50 bg-white border rounded-xl shadow-lg mt-1 w-[260px] max-h-72 overflow-y-auto hidden p-4 text-sm space-y-2">
+
+                                    <!-- Seleccionar todo -->
+                                    <label class="flex items-center gap-2 font-semibold border-b pb-2 mb-2">
+                                        <input type="checkbox" id="check-todos-exp" onchange="toggleAllExperiencia(this)">
+                                        Seleccionar todo
+                                    </label>
+
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="MENOS DE 1 AÑO" onchange="applyFilters()"> MENOS DE 1 AÑO</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DE 1 A 2 AÑOS" onchange="applyFilters()"> DE 1 A 2 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DE 2 A 3 AÑOS" onchange="applyFilters()"> DE 2 A 3 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DE 3 A 6 AÑOS" onchange="applyFilters()"> DE 3 A 6 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DE 6 A 11 AÑOS" onchange="applyFilters()"> DE 6 A 11 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DE 11 A 16 AÑOS" onchange="applyFilters()"> DE 11 A 16 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="DE 16 A 20 AÑOS" onchange="applyFilters()"> DE 16 A 20 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="MAS DE 20 AÑOS" onchange="applyFilters()"> MAS DE 20 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="MÁS DE 20 AÑOS" onchange="applyFilters()"> MÁS DE 20 AÑOS</label>
+                                    <label class="flex items-center gap-2"><input type="checkbox" value="SIN INFORMACIÓN" onchange="applyFilters()"> SIN INFORMACIÓN</label>
+
+                                </div>
+                            </div>
 
                             <input type="text" id="tiempo-ult-empleo-filter" oninput="applyFilters()" placeholder="Tiempo último empleo" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="PROYECTOS - JAC">
+                            <input type="text" id="cargo-filter" oninput="applyFilters()" placeholder="Cargo Estandarizado" class="w-52 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
+                            <input type="text" id="gestion-filter" oninput="applyFilters()" placeholder="Filtrar por Gestión" class="w-48 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="GESTION">
 
                         <!--  <button onclick="loadTable()" class="bg-indigo-600 text-white px-6 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all whitespace-nowrap">🔄 Actualizar</button>-->
                         </div>
@@ -237,6 +325,8 @@
         let usuarioActual = localStorage.getItem("usuarioGestion") || "";
         let cacheData = [];
         let currentConfig = {};
+        let sheetCache = {}; // ← NUEVO CACHE 
+          
 
         const sheetConfigs = {
             "CESANTES ATENDIDOS": { columns: ["AÑO","TIPO DE DOCUMENTO","DOCUMENTO","PRIMER_APELLIDO","SGDO_APELLIDO","PRIMER_NOMBRE","EDAD","GENERO","NIVEL DE ESCOLARIDAD","ESTUDIOS REALIZADOS","EMPRESA EN QUE LABORO","CARGO ESTANDARIZADO","RANGO DE TIEMPO DE EXPERIENCIA","GESTION"], idKey: "DOCUMENTO" },
@@ -289,9 +379,82 @@
             ]
         };
 
+
+
+        document.addEventListener("click", function(event){
+
+            const dropdown = document.getElementById("nivel-escolar-dropdown");
+            const button = document.querySelector("#nivel-escolar-filter button");
+
+            if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                dropdown.classList.add("hidden");
+            }
+
+        });
+
+        document.addEventListener("click", function(e){
+
+            const rango = document.getElementById("rango-exp-filter");
+
+            if(!rango.contains(e.target)){
+                document.getElementById("rango-exp-dropdown").classList.add("hidden");
+            }
+
+        });
+
+        document.addEventListener("click", function(event){
+
+            const dropdown = document.getElementById("nivel-escolar-dropdown-jac");
+            const button = document.querySelector("#nivel-escolar-filter-jac button");
+
+            if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                dropdown.classList.add("hidden");
+            }
+
+        });
+
+
+
+
+        function toggleDropdown(id){
+            const el = document.getElementById(id);
+            el.classList.toggle("hidden");
+        }
+
+
+        
+        function actualizarDatos(){
+            sheetCache = {};
+            loadTable();
+        }
+
+        function toggleAllExperiencia(source){
+
+            const checks = document.querySelectorAll('#rango-exp-dropdown input[type="checkbox"]:not(#check-todos-exp)');
+
+            checks.forEach(c => {
+                c.checked = source.checked;
+            });
+
+            applyFilters();
+        }
+
         async function loadTable() {
             const sheetName = document.getElementById('sheet-selector').value;
             currentConfig = sheetConfigs[sheetName];
+
+
+            // 🔵 SI YA ESTÁ EN CACHE NO CONSULTA AL SERVIDOR
+            if (sheetCache[sheetName]) {
+                cacheData = sheetCache[sheetName];
+                renderTableHead();
+                renderRows(cacheData);
+                updateFilterVisibility(sheetName);
+                return;
+            }
+
+
+
 
             // 1. Mostrar el Loading y resetear la barra
             const overlay = document.getElementById('loading-overlay');
@@ -322,7 +485,7 @@
                     msgLabel.innerText = mensajes[i];
                     i++;
                 }
-            }, 25000); // Cambia el mensaje cada 25 segundos
+            }, 10000); // Cambia el mensaje cada 10 segundos
 
 
 
@@ -337,6 +500,8 @@
 
                 if (data.status === "success") {
                     cacheData = data.data || [];
+                      // 🔵 GUARDAR EN CACHE
+                       sheetCache[sheetName] = cacheData;
                     // --- NUEVA LÓGICA DE ORDENAMIENTO ---
                     if (sheetName === "CESANTES ATENDIDOS") {
                         cacheData.sort((a, b) => {
@@ -365,7 +530,7 @@
                 overlay.classList.remove('flex');
                 bar.style.transition = 'none'; // Resetear transición para la próxima vez
                 bar.style.width = '0%';
-                setTimeout(() => { bar.style.transition = 'width 120000ms linear'; }, 100);
+                setTimeout(() => { bar.style.transition = 'width 60000ms linear'; }, 100);
             }
         }
 
@@ -377,6 +542,31 @@
                 </tr>
             `;
         }
+
+        function toggleAllEscolaridad(source){
+
+            const checks = document.querySelectorAll('#nivel-escolar-dropdown input[type="checkbox"]:not(#check-todos-escolaridad)');
+
+            checks.forEach(c => {
+                c.checked = source.checked;
+            });
+
+            applyFilters();
+        }
+
+
+
+        function toggleAllEscolaridadJac(source){
+
+            const checks = document.querySelectorAll('#nivel-escolar-dropdown-jac input[type="checkbox"]:not(#check-todos-escolaridad-jac)');
+
+            checks.forEach(c => {
+                c.checked = source.checked;
+            });
+
+            applyFilters();
+        }
+
 
         function renderRows(data) {
             const body = document.getElementById('table-body');
@@ -391,7 +581,7 @@
                     return `<td class="p-3 text-xs text-gray-700 truncate max-w-xs">${val}</td>`;
                 }).join('');
 
-                html += `<td class="p-3 text-center sticky right-0 bg-white z-10"><button onclick="abrirModalGestion('${id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-[10px] font-black shadow transition-all">GESTIONAR</button></td>`;
+                html += `<td class="p-3 text-center sticky right-0 bg-white z-10"><button onclick="abrirModalGestion('${id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-[10px] font-black shadow transition-all">POSTULAR</button></td>`;
 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-50 transition-colors";
@@ -485,10 +675,14 @@
                 const anio = document.getElementById('anio-filter').value.trim();
                 if (anio) filtered = filtered.filter(r => String(r["AÑO"] || "").includes(anio));
 
-                const nivel = document.getElementById('nivel-escolar-filter').value.trim().toUpperCase();
-                if (nivel) {
+                const nivelChecks = document.querySelectorAll('#nivel-escolar-dropdown input:checked');
+                const nivelesSeleccionados = Array.from(nivelChecks).map(c => c.value.toUpperCase());
+
+                if (nivelesSeleccionados.length > 0) {
                     filtered = filtered.filter(r =>
-                        String(r["NIVEL DE ESCOLARIDAD"] || "").trim().toUpperCase() === nivel
+                        nivelesSeleccionados.includes(
+                            String(r["NIVEL DE ESCOLARIDAD"] || "").trim().toUpperCase()
+                        )
                     );
                 }
 
@@ -497,23 +691,45 @@
                     String(r["CARGO ESTANDARIZADO"] || "").toLowerCase().includes(cargo)
                 );
 
-                const rango = document.getElementById('rango-exp-filter').value;
-                if (rango) filtered = filtered.filter(r => 
-                    (r["RANGO DE TIEMPO DE EXPERIENCIA"] || "") === rango
-                );
+                const rangoChecks = document.querySelectorAll('#rango-exp-dropdown input:checked');
+                const rangosSeleccionados = Array.from(rangoChecks).map(c => c.value);
+
+                if (rangosSeleccionados.length > 0) {
+                    filtered = filtered.filter(r => 
+                        rangosSeleccionados.includes(
+                            String(r["RANGO DE TIEMPO DE EXPERIENCIA"] || "").trim()
+                        )
+                    );
+                }
             }
 
             if (sheet === "PROYECTOS - JAC") {
-                const nivel = document.getElementById('nivel-escolar-filter').value.toLowerCase().trim();
-                if (nivel) filtered = filtered.filter(r => String(r["NIVEL DE ESCOLARIDAD"] || "").toLowerCase().toUpperCase().includes(nivel));
+                const nivelChecks = document.querySelectorAll('#nivel-escolar-dropdown-jac input:checked');
+                const nivelesSeleccionados = Array.from(nivelChecks).map(c => c.value.toUpperCase());
 
+                if (nivelesSeleccionados.length > 0) {
+                    filtered = filtered.filter(r =>
+                        nivelesSeleccionados.includes(
+                            String(r["NIVEL DE ESCOLARIDAD"] || "").trim().toUpperCase()
+                        )
+                    );
+                }
+                
                 const tiempo = document.getElementById('tiempo-ult-empleo-filter').value.toLowerCase().trim();
                 if (tiempo) filtered = filtered.filter(r => String(r["TIEMPO LABORADO ÚLTIMO EMPLEO"] || "").toLowerCase().includes(tiempo));
             }
 
             if (sheet === "RETIRADOS CON CREDITO") {
-                const nivel = document.getElementById('nivel-escolar-filter').value.toLowerCase().trim();
-                if (nivel) filtered = filtered.filter(r => String(r["NIVEL DE ESCOLARIDAD"] || "").toLowerCase().toUpperCase().includes(nivel));
+                const nivelChecks = document.querySelectorAll('#nivel-escolar-dropdown input:checked');
+                const nivelesSeleccionados = Array.from(nivelChecks).map(c => c.value.toUpperCase());
+
+                if (nivelesSeleccionados.length > 0) {
+                    filtered = filtered.filter(r =>
+                        nivelesSeleccionados.includes(
+                            String(r["NIVEL DE ESCOLARIDAD"] || "").trim().toUpperCase()
+                        )
+                    );
+                }
             }
 
             renderRows(filtered);
@@ -729,5 +945,3 @@
     </script>
 </body>
 </html>
-
-
