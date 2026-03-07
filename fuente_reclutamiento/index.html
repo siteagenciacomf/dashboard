@@ -58,12 +58,12 @@
             </div>
             
             <h2 class="text-2xl font-bold text-gray-800 mb-1">Bienvenido</h2>
-            <p class="text-gray-400 text-sm mb-8">Sistema de Gestión de Reclutamiento</p>
+            <p class="text-gray-400 text-sm mb-8">Primera Fuente de Reclutamiento</p>
 
             <div class="mb-4 text-left">
-                <label class="block text-[10px] font-bold text-indigo-500 uppercase mb-1 ml-1">Selecciona tu usuario:</label>
+                <label class="block text-[10px] font-bold text-indigo-500 uppercase mb-1 ml-1">Reclutador:</label>
                 <select id="user-direct-select" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-100 outline-none focus:ring-2 focus:ring-indigo-400 text-sm font-medium text-gray-700">
-                    <option value="" disabled selected>Escoge un responsable...</option>
+                    <option value="" disabled selected>Escoge tu nombre...</option>
                     <optgroup label="👨‍💼 PSICORIENTADORES" id="group-psic">
                     </optgroup>
                     <optgroup label="🧾 AUXILIARES" id="group-aux">
@@ -78,7 +78,7 @@
                 </svg>
             </button>
 
-            <p class="text-[9px] text-gray-400 uppercase font-bold tracking-widest">Control de acceso institucional</p>
+            <p class="text-[9px] text-gray-400 uppercase font-bold tracking-widest">Control de acceso - Intermediación Laboral</p>
         </div>
     </div>
 
@@ -555,11 +555,11 @@
                     document.getElementById("app-container").style.display = "block";
                     // ------------------------------
 
-                    document.getElementById("usuario-actual").innerText = "Usuario: " + usuarioActual;
+                    document.getElementById("usuario-actual").innerText = "Reclutador: " + usuarioActual;
             }
 
             // Mostrar siempre el usuario arriba
-            document.getElementById("usuario-actual").innerText = "Usuario: " + usuarioActual;
+            document.getElementById("usuario-actual").innerText = "Reclutador: " + usuarioActual;
         }
 
 
@@ -650,7 +650,7 @@
         }
 
 
-        document.getElementById("usuario-actual").innerText = "Usuario: " + usuarioActual;
+        document.getElementById("usuario-actual").innerText = "Reclutador: " + usuarioActual;
 
         window.onload = async () => {
             if (!usuarioActual) {
@@ -658,7 +658,7 @@
             } else {
                 // Si ya existe el usuario, mostramos el panel directamente
                 document.getElementById("app-container").style.display = "block";
-                document.getElementById("usuario-actual").innerText = "Usuario: " + usuarioActual;
+                document.getElementById("usuario-actual").innerText = "Reclutador: " + usuarioActual;
             }
             loadTable();
         };
@@ -704,7 +704,7 @@
             
             document.getElementById("login-container").style.display = "none";
             document.getElementById("app-container").style.display = "block";
-            document.getElementById("usuario-actual").innerText = "Usuario: " + usuarioActual;
+            document.getElementById("usuario-actual").innerText = "Reclutador: " + usuarioActual;
             
             loadTable();
         }
@@ -719,7 +719,7 @@
             } else {
                 document.getElementById("login-container").style.display = "none";
                 document.getElementById("app-container").style.display = "block";
-                document.getElementById("usuario-actual").innerText = "Usuario: " + usuarioActual;
+                document.getElementById("usuario-actual").innerText = "Reclutador: " + usuarioActual;
                 loadTable();
             }
         };
