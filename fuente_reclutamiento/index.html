@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta de Reclutamiento</title>
+    <title>Fuentes de Reclutamiento</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -11,54 +11,75 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: #f8fafc;
+            background-color: #f8fafc;
+            /* Un fondo con un toque de luz */
+            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%), 
+                            radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.05) 0px, transparent 50%);
             color: #1e293b;
         }
 
+        /* Efecto de cristal ultra suave */
         .glass {
-            background: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.7);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
         }
 
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        /* Filas de la tabla con efecto "Apple" */
+        tr {
+            transition: all 0.2s ease;
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        tr:hover {
+            background-color: #ffffff !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            z-index: 10;
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
+
+        /* Botón principal estilo Moderno */
+        .btn-premium {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+
+        .btn-premium:hover {
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.23);
+            transform: scale(1.02);
         }
-        .loading-skeleton { 
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); 
-            background-size: 200% 100%; 
-            animation: loading 1.5s infinite; 
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+
+
+
+
+
+        tr:hover {
+            background-color: rgba(79, 70, 229, 0.05) !important; /* Un toque sutil de azul al pasar el mouse */
+            transition: background-color 0.2s ease;
         }
-        @keyframes loading { 
-            0% { background-position: 200% 0; } 
-            100% { background-position: -200% 0; } 
+
+        td {
+            border-bottom: 1px solid #f1f5f9; /* Líneas divisorias muy finas y profesionales */
+            padding: 1rem !important;
         }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden p-6">
+<body class="h-screen flex flex-col overflow-hidden p-6 bg-slate-100">
 
     <!-- LOGIN -->
-    <div id="login-container" class="fixed inset-0 flex items-center justify-center bg-slate-100 z-50">
-        <div class="glass p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-white">
+    <div id="login-container" class="fixed inset-0 z-[100] bg-indigo-900 flex items-center justify-center p-4">
+        <div class="glass p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center border border-white/40 backdrop-blur-xl">
             <div class="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                <svg class="w-10 h-10 text-slate-500 block mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
             </div>
             
             <h2 class="text-2xl font-bold text-gray-800 mb-1">Bienvenido</h2>
-            <p class="text-gray-400 text-sm mb-8">Primera Fuente de Reclutamiento</p>
+            <p class="text-gray-600 text-sm mb-8">Primera Fuente de Reclutamiento</p>
 
             <div class="mb-4 text-left">
                 <label class="block text-[10px] font-bold text-indigo-500 uppercase mb-1 ml-1">Reclutador:</label>
@@ -71,20 +92,20 @@
                 </select>
             </div>
             
-            <button onclick="accesoDirecto()" class="w-full bg-[#5c54ed] hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg flex items-center justify-center gap-2 mb-6">
+            <button onclick="accesoDirecto()" class="w-full btn-premium hover:opacity-90 text-white font-bold py-3.5 rounded-2xl transition-all transform active:scale-95 flex items-center justify-center gap-2 mb-6 bg-indigo-600 rounded-2xl">
                 <span>Acceder al Panel</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
             </button>
 
-            <p class="text-[9px] text-gray-400 uppercase font-bold tracking-widest">Control de acceso - Intermediación Laboral</p>
+            <p class="text-[9px] text-gray-600 uppercase font-bold tracking-widest">Control de acceso - Intermediación Laboral</p>
         </div>
     </div>
 
 
     <!-- CARGA -->
-    <div id="loading-overlay" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex-col items-center justify-center hidden">
+    <div id="loading-overlay" class="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-md flex-col items-center justify-center hidden">
         <div class="relative">
             <div class="w-24 h-24 border-8 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
             <div class="absolute inset-0 flex items-center justify-center">
@@ -95,16 +116,16 @@
         </div>
         <div class="mt-8 text-center px-6">
             <h3 class="text-white text-xl font-bold mb-2">Sincronizando Base de Datos</h3>
-            <p id="loading-msg" class="text-indigo-200 text-sm animate-pulse">Esto puede tomar hasta 2 minutos debido al volumen de datos...</p>
+            <p id="loading-msg" class="text-indigo-100 text-sm animate-pulse">Esto puede tomar hasta 2 minutos debido al volumen de datos...</p>
             <div class="mt-4 w-64 bg-slate-700 rounded-full h-1.5 mx-auto overflow-hidden">
                 <div id="loading-bar" class="bg-indigo-500 h-full w-0 transition-all duration-[120000ms] ease-linear"></div>
             </div>
         </div>
         <br>
-                                    <button onclick="cerrarSesion()" 
-                                        style="background:#ef4444; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
-                                        Cambiar Usuario
-                                    </button>
+                        <button onclick="cerrarSesion()" 
+                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-4 py-2 rounded-lg transition">
+                            Cambiar Usuario
+                        </button>
     </div>
 
 
@@ -114,48 +135,127 @@
     <!-- SISTEMA -->
         <div id="app-container" style="display:none;">
                 <div class="max-w-screen-2xl mx-auto">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                        <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Panel de Reclutamiento</h1>
-                            <p class="text-sm text-gray-500">Consulta y Seguimiento de Candidatos</p>
-                            <span id="usuario-actual" style="font-size:12px; color:#475569;"></span>
-                        </div>
-                        <div class="w-full md:w-80">
-                            <label class="block text-[10px] font-bold text-indigo-500 uppercase mb-1">Fuente de Datos:</label>
-                            <select id="sheet-selector" onchange="loadTable()" class="w-full p-3 rounded-xl border-none shadow-sm font-semibold text-gray-700 outline-none focus:ring-2 focus:ring-indigo-500">
-                                <option value="CESANTES ATENDIDOS">📍 CESANTES ATENDIDOS</option>
-                                <option value="BANCO DE OFERENTES EN FRONT">BANCO DE OFERENTES EN FRONT</option>
-                                <option value="PROYECTOS - JAC">PROYECTOS - JAC</option>
-                                <option value="RETIRADOS CON CREDITO">RETIRADOS CON CRÉDITO</option>
-                            </select>
+                   
+
+
+
+
+
+
+
+
+
+
+                
+
+
+
+
+
+
+
+                    <div class="glass rounded-[2rem] shadow-xl shadow-slate-200 border-white/50 overflow-hidden bg-white">
+
+
+
+
+
+                    <header class="p-6 bg-white border-b border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+
+                        <!-- LADO IZQUIERDO -->
+                        <div class="flex items-center gap-4">
+
+                            <!-- ICONO -->
+                            <div class="bg-indigo-600 p-3 rounded-2xl shadow-lg shadow-indigo-100">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                            </div>
+
+                            <!-- TITULO -->
+                            <div>
+                                <h1 class="text-xl font-bold text-slate-800 leading-tight">
+                                    Panel de Reclutamiento
+                                </h1>
+
+                                <p class="text-xs text-indigo-500 font-semibold uppercase tracking-wider">
+                                    Consulta y Seguimiento de Candidatos
+                                </p>
+
+                                <!-- VARIABLE JS (NO CAMBIADA) -->
+                                <span id="usuario-actual" class="text-xs text-slate-500"></span>
+                            </div>
+
                         </div>
 
-                        <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-bottom:10px;">
-                            
-                            <span id="usuario-actual" style="font-size:12px; color:#475569;"></span>
+
+                        <!-- LADO DERECHO -->
+                        <div class="flex items-center gap-3 w-full md:w-auto">
+
+                            <!-- SELECT -->
+                            <select id="sheet-selector"
+                                onchange="loadTable()"
+                                class="bg-slate-100 px-4 py-3 rounded-2xl text-sm font-bold text-slate-700 border-none focus:ring-2 focus:ring-indigo-500 w-full md:w-72">
+
+                                <option value="CESANTES ATENDIDOS">📍 CESANTES ATENDIDOS</option>
+                                <option value="BANCO DE OFERENTES EN FRONT">BANCO DE OFERENTES</option>
+                                <option value="PROYECTOS - JAC">PROYECTOS - JAC</option>
+                                <option value="RETIRADOS CON CREDITO">RETIRADOS CRÉDITO</option>
+
+                            </select>
+
+                            <!-- BOTON ACTUALIZAR -->
                             <button onclick="actualizarDatos()"
-                                style="background:#6e6cdf; color:white; border:none; padding:6px 12px; border-radius:8px; font-size:12px; cursor:pointer;">
+                                class="bg-indigo-50 text-indigo-600 px-4 py-3 rounded-xl hover:bg-indigo-100 transition flex items-center gap-2 text-sm font-semibold">
+
                                 Actualizar
                             </button>
+
+                            <!-- BOTON SALIR -->
                             <button onclick="cerrarSesion()"
-                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-2 rounded-lg flex items-center gap-2">
+                                class="bg-red-50 text-red-600 px-4 py-3 rounded-xl hover:bg-red-100 transition flex items-center gap-2 text-sm font-semibold">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15M18 12H9m0 0l3-3m-3 3l3 3"/>
-                            </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15M18 12H9m0 0l3-3m-3 3l3 3"/>
+                                </svg>
 
-                            Salir
+                                Salir
                             </button>
 
-
                         </div>
-                    </div>
 
-                    <div class="glass rounded-3xl shadow-2xl overflow-hidden">
+                    </header>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <!-- FILTROS -->
-                        <div class="p-6 border-b border-gray-100 flex flex-wrap gap-3 items-end">
-                            <input type="text" id="search-input" oninput="applyFilters()" placeholder="Búsqueda general..." class="flex-1 min-w-[230px] p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm">
+                        <div class="p-6 border-b border-slate-200 flex flex-wrap gap-3 items-end bg-slate-50">
+                           
+                           <div class="relative flex-1 min-w-[300px]">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+                                <input class="w-full pl-11 pr-4 py-3 bg-white rounded-2xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition" type="text" id="search-input" oninput="applyFilters()" placeholder="Buscar por nombre, documento o perfil..." 
+                                class="w-full pl-11 pr-4 py-3 bg-slate-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-indigo-200">
+                            </div>
+                           
+                           
                             <input type="text" id="anio-filter" oninput="applyFilters()" placeholder="Año Atención" class="w-28 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-sheet="CESANTES ATENDIDOS">
 
                             <input type="text" id="edad-filter" oninput="applyFilters()" placeholder="Edad (25 o 20-35)" class="w-36 p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-100 border-none text-sm hidden" data-filter-for="EDAD">
@@ -308,10 +408,10 @@
                         <!--  <button onclick="loadTable()" class="bg-indigo-600 text-white px-6 rounded-xl font-bold text-sm hover:bg-indigo-700 transition-all whitespace-nowrap">🔄 Actualizar</button>-->
                         </div>
 
-                        <div class="overflow-auto h-[70vh] custom-scrollbar">
-                            <table class="w-full text-left border-collapse min-w-[1400px]">
-                                <thead id="table-head" class="bg-slate-50 text-[11px] uppercase text-slate-500 font-semibold sticky top-0 z-10"></thead>
-                                <tbody id="table-body" class="text-sm divide-y divide-gray-50"></tbody>
+                        <div class="overflow-x-scroll overflow-y-auto h-[70vh] custom-scrollbar">
+                            <table class="w-full text-left border-separate border-spacing-0 min-w-[1600px]">
+                                <thead id="table-head" class="bg-white text-[11px] uppercase text-slate-400 font-bold sticky top-0 z-30 border-b border-slate-200 pointer-events-none"></thead>
+                                <tbody id="table-body" class="text-sm divide-y divide-slate-100 bg-white"></tbody>
                             </table>
                         </div>
                     </div>
@@ -468,7 +568,7 @@
 
             // Preparar esqueletos en la tabla
             document.getElementById('table-body').innerHTML = Array(6).fill(0).map(() => 
-                `<tr>${currentConfig.columns.map(() => `<td class="p-4"><div class="h-4 loading-skeleton rounded w-full"></div></td>`).join('')}<td></td></tr>`
+                `<tr class="hover:bg-slate-50 transition">${currentConfig.columns.map(() => `<td class="p-4"><div class="h-4 loading-skeleton rounded w-full"></div></td>`).join('')}<td></td></tr>`
             ).join('');
 
             const msgLabel = document.getElementById('loading-msg');
@@ -519,7 +619,7 @@
                 }
             } catch (e) {
                 console.error(e);
-                document.getElementById('table-body').innerHTML = `<tr><td colspan="${currentConfig.columns.length + 1}" class="p-10 text-center text-red-600">Error de conexión</td></tr>`;
+                document.getElementById('table-body').innerHTML = `<tr class="hover:bg-red-50 transition"><td colspan="${currentConfig.columns.length + 1}" class="p-10 text-center text-red-600">Error de conexión</td></tr>`;
             } finally {
                 // --- AGREGAMOS ESTA LÍNEA AQUÍ ---
                 clearInterval(intervalMsg); 
@@ -578,19 +678,19 @@
                 let html = currentConfig.columns.map(col => {
                     let val = item[col] || '-';
                     if (col.toUpperCase().includes('GESTION')) val = val || '<span class="italic text-gray-400">Sin gestión</span>';
-                    return `<td class="p-3 text-xs text-gray-700 truncate max-w-xs">${val}</td>`;
+                    return `<td class="p-3 text-xs text-slate-700 truncate max-w-xs">${val}</td>`;
                 }).join('');
 
-                html += `<td class="p-3 text-center sticky right-0 bg-white z-10"><button onclick="abrirModalGestion('${id}')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-xl text-[10px] font-black shadow transition-all">POSTULAR</button></td>`;
+                html += '<td class="p-3 text-center sticky right-0 bg-white/50 backdrop-blur-sm"><button onclick="abrirModalGestion(\''+id+'\')" class="btn-premium text-white px-4 py-1.5 rounded-lg text-[10px] font-bold tracking-wider transition-all">POSTULAR</button></td>';
 
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.className = "hover:bg-indigo-50 transition-colors duration-200";
                 tr.innerHTML = html;
                 body.appendChild(tr);
             });
 
             if (data.length > 300) {
-                body.innerHTML += `<tr><td colspan="${currentConfig.columns.length + 1}" class="p-3 text-center text-xs text-gray-500 italic">Mostrando 300 de ${data.length} • Usa filtros</td></tr>`;
+                body.innerHTML += `<tr class="bg-slate-50"><td colspan="${currentConfig.columns.length + 1}" class="p-3 text-center text-xs text-slate-500 italic">Mostrando 300 de ${data.length} • Usa filtros</td></tr>`;
             }
         }
 
