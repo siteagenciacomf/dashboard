@@ -1,0 +1,1609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agencia de Empleo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%), 
+                            radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.05) 0px, transparent 50%);
+            color: #1e293b;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .sidebar-item {
+            transition: all 0.2s ease;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            transform: translateX(4px);
+        }
+
+        /* Estilo especial para el botón de Inicio */
+        .btn-home-sidebar {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            color: #4f46e5;
+            transition: all 0.3s ease;
+        }
+
+        .btn-home-sidebar:hover {
+            background: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-premium {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+            transition: all 0.3s ease;
+        }
+
+        .btn-premium:hover {
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.23);
+            transform: translateY(-3px);
+        }
+
+        .card-menu {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-menu:hover {
+            transform: scale(1.03);
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate-reorder {
+            animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .separator-line {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            width: 80%;
+            margin: 2rem auto;
+        }
+
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <aside class="w-72 glass border-r border-slate-200 flex flex-col z-20">
+        <div class="p-6 border-b border-slate-100">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2.5 rounded-xl shadow-lg">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="font-bold text-slate-800 leading-tight">Agencia Empleo</h2>
+                    <p class="text-[10px] text-indigo-500 font-bold uppercase tracking-widest">Gestión Interna</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto p-4 custom-scrollbar">
+            
+            <div class="mb-8">
+                <button onclick="goHome()" class="w-full btn-home-sidebar p-3 rounded-xl text-sm font-bold flex items-center justify-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    INICIO
+                </button>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2">Análisis</p>
+                <div class="sidebar-item p-3 rounded-xl text-sm font-semibold flex items-center gap-3" onclick="showSection('Indicadores y Coberturas')">
+                    <span>📊</span> Indicadores y Coberturas
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2">Contable</p>
+                <div class="sidebar-item p-3 rounded-xl text-sm font-semibold flex items-center gap-3" onclick="showSection('Presupuesto')">
+                    <span>💰</span> Presupuesto Agencia
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2">Operación</p>
+                <div class="sidebar-item p-3 rounded-xl text-sm font-semibold flex items-center gap-3" onclick="showSection('Procesos')">
+                    <span>⚙️</span> Procesos Agencia
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2">Estandarización</p>
+                <div class="sidebar-item p-3 rounded-xl text-sm font-semibold flex items-center gap-3" onclick="showSection('Calidad')">
+                    <span>🛡️</span> Calidad
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 ml-2">Otros</p>
+                <div class="sidebar-item p-3 rounded-xl text-sm font-semibold flex items-center gap-3" onclick="showSection('Infraestructura')">
+                    <span>🏢</span> Infraestructura
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <div class="sidebar-item p-3 rounded-xl text-sm font-semibold flex items-center gap-3" onclick="showSection('Documentos')">
+                    <span>📝</span> Documentos
+                </div>
+            </div>
+
+        </nav>
+
+        <div class="p-4 border-t border-slate-100 text-center">
+            <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Panel Administrativo v1.0</p>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-y-auto relative custom-scrollbar">
+        
+        <header class="sticky top-0 z-10 p-6 flex justify-between items-center bg-white/30 backdrop-blur-md border-b border-white/20">
+            <h1 id="section-title" class="text-2xl font-bold text-slate-800">Panel Principal</h1>
+            <div class="flex items-center gap-4 text-sm font-medium text-slate-600">
+                <span class="bg-white px-3 py-1 rounded-full shadow-sm border border-slate-100">Agencia de Empleo Comfenalco</span>
+            </div>
+        </header>
+
+        <div id="home-content" class="p-8 max-w-6xl mx-auto animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div onclick="showSection('Indicadores y Coberturas')" class="card-menu glass p-8 rounded-[2.5rem] cursor-pointer border-white">
+                    <div class="w-14 h-14 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Indicadores y Coberturas</h3>
+                    <p class="text-sm text-slate-500 mb-6">Seguimiento de coberturas y metas alcanzadas.</p>
+                    <span class="text-indigo-600 text-xs font-bold uppercase tracking-widest">Explorar →</span>
+                </div>
+
+                <div onclick="showSection('Presupuesto')" class="card-menu glass p-8 rounded-[2.5rem] cursor-pointer border-white">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Presupuesto</h3>
+                    <p class="text-sm text-slate-500 mb-6">Gestión de cuentas contables y presupuesto general.</p>
+                    <span class="text-emerald-600 text-xs font-bold uppercase tracking-widest">Explorar →</span>
+                </div>
+
+                <div onclick="showSection('Procesos')" class="card-menu glass p-8 rounded-[2.5rem] cursor-pointer border-white">
+                    <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Procesos</h3>
+                    <p class="text-sm text-slate-500 mb-6">Orientación, intermediación y gestión empresarial.</p>
+                    <span class="text-purple-600 text-xs font-bold uppercase tracking-widest">Explorar →</span>
+                </div>
+
+                <div onclick="showSection('Calidad')" class="card-menu glass p-8 rounded-[2.5rem] cursor-pointer border-white">
+                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4M12 3l7 4v5c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V7l7-4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Calidad</h3>
+                    <p class="text-sm text-slate-500 mb-6">Procedimientos, protocolos, riesgos y salidas no conformes.</p>
+                    <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Explorar →</span>
+                </div>
+
+                <div onclick="showSection('Infraestructura')" class="card-menu glass p-8 rounded-[2.5rem] cursor-pointer border-white">
+                    <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 21h18M5 21V7l8-4 6 4v14M9 9h2m4 0h2m-6 4h2m4 0h2"/>
+                        </svg>
+                    </div>
+
+                    <h3 class="text-lg font-bold mb-2">Infraestructura</h3>
+                    <p class="text-sm text-slate-500 mb-6">Gestión de infraestructura y sedes de la Agencia de Empleo.</p>
+                    <span class="text-sky-600 text-xs font-bold uppercase tracking-widest">Explorar →</span>
+                </div>
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+
+
+
+        
+
+        <div id="dynamic-content" class="p-8 hidden">
+            <div id="submenu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+                </div>
+        </div>
+
+    </main>
+
+    <script>
+
+// <!-- MENU GENERAL -->
+
+        const menuData = {
+            'Indicadores y Coberturas': ['Indicadores', 'Coberturas'], // Simplifiqué el nombre para evitar errores
+            'Presupuesto': ['General', 'Cuentas Contables'],
+            'Procesos': ['Orientación Laboral', 'Intermediación Laboral', 'Gestión Empresarial', 'Unidad Movil'],
+            'Calidad': ['Procedimientos', 'Protocolos', 'Riesgos', 'Salidas no Conforme', 'Indicador de Calidad', 'Informes de Calidad'],
+            'Infraestructura': ['Gestión de Infraestructura']
+        };
+
+
+
+
+        function goHome() {
+            document.getElementById('home-content').classList.remove('hidden');
+            document.getElementById('dynamic-content').classList.add('hidden');
+            document.getElementById('section-title').innerText = "Panel Principal";
+        }
+
+
+
+// <!-- LLAMADA DE SECCIONES  -->
+        
+
+        function showSection(section) {
+            console.log("Cargando sección:", section);
+
+            // DEFINIMOS EL GRID AL PRINCIPIO
+            const grid = document.getElementById('submenu-grid');
+            document.getElementById('home-content').classList.add('hidden');
+            document.getElementById('dynamic-content').classList.remove('hidden');
+            document.getElementById('section-title').innerText = section;
+
+            // 1. CASO: PRESUPUESTO
+            if (section === 'Presupuesto') {
+                renderPresupuesto();
+                return; 
+            }
+
+            // 2. CASO: PROCESOS
+            else if (section === 'Procesos') {
+                grid.className = "w-full h-[80vh] animate-fade-in"; 
+                grid.innerHTML = `
+                    <div class="glass w-full h-full rounded-[2.5rem] overflow-hidden shadow-2xl border-white relative">
+                        <div class="absolute top-4 right-8 z-10">
+                            <span class="bg-yellow-400 text-yellow-900 text-[10px] font-black px-3 py-1 rounded-full shadow-sm">
+                                POWER BI LIVE
+                            </span>
+                        </div>
+                        <iframe 
+                            title="Reporte Procesos" 
+                            class="w-full h-full border-none"
+                            src="https://app.powerbi.com/view?r=eyJrIjoiNGNjMzcxYmEtZjExMC00ZjQzLWExMzUtMDBmMmU1ZDIxMTFmIiwidCI6ImQ2MDFlZjcxLTlkMTQtNGJhOC04NTc3LTA4YzkxMTYzNGM0MyIsImMiOjR9&amp;pageName=8d30e90840237e232c1d" 
+                            frameborder="0" 
+                            allowFullScreen="true">
+                        </iframe>
+                    </div>
+                `;
+            }
+
+
+
+            // 3. CASO: CALIDAD
+            else if (section === 'Calidad') {
+                grid.innerHTML = '';
+                grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full";
+                
+                // Solo mostramos los botones que pertenecen a Calidad
+                const opcionesCalidad = ['Procedimientos', 'Protocolos', 'Riesgos', 'Salidas no Conforme', 'Indicador de Calidad', 'Informe de Calidad']; 
+                
+                opcionesCalidad.forEach(opcion => {
+                    grid.innerHTML += `
+                        <button onclick="navegacionCalidad('${opcion}')" class="btn-premium text-white p-6 rounded-3xl font-bold text-sm flex justify-between items-center group">
+                            ${opcion}
+                            <svg class="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    `;
+                });
+            }
+
+
+
+
+
+            // 4. CASO: GENERAL (Demas secciones)
+            else {
+                grid.innerHTML = '';
+                grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full";
+
+                if (menuData[section]) {
+                    menuData[section].forEach(subItem => {
+                        grid.innerHTML += `
+                            <button onclick="renderTablas('${subItem}')" class="btn-premium text-white p-6 rounded-3xl font-bold text-sm flex justify-between items-center group">
+                                ${subItem}
+                                <svg class="w-5 h-5 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        `;
+                    });
+                } 
+
+            // 5. CASO: INDICADORE Y COBERTURAS 
+                if (section === 'Indicadores y Coberturas') {
+                    grid.innerHTML += `
+                        <div class="col-span-full mt-8 flex flex-col gap-8">
+                            
+                            <div class="glass p-6 rounded-3xl border-white shadow-sm">
+                                <h4 class="font-bold text-slate-700 text-lg">METAS AL 5.1% ➜ IPC 2026</h4>
+                                <p class="text-sm text-slate-500">Consolidado anual de indicadores y coberturas.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                                
+                                <div class="glass rounded-[2rem] overflow-hidden border-white shadow-xl">
+                                    <div class="bg-indigo-600 p-6 flex justify-between items-center text-white">
+                                        <h3 class="font-bold text-xl">Indicadores</h3>
+                                        <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left">
+                                            <thead class="bg-slate-50 border-b border-slate-100">
+                                                <tr class="text-[10px] uppercase text-slate-400 font-bold">
+                                                    <th class="px-6 py-4">Indicador</th>
+                                                    <th class="px-4 py-4 text-center">Meta</th>
+                                                    <th class="px-4 py-4 text-center">Ejec.</th>
+                                                    <th class="px-6 py-4 text-center">% Cumplimiento</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-sm divide-y divide-slate-100 bg-white">
+                                                ${generarFila("Empleadores Nuevos", 399, 27, "indigo")}
+                                                ${generarFila("Remisiones", 100795, 10742, "purple")}
+                                                ${generarFila("Orientación", 5825, 1523, "blue")}
+                                                ${generarFila("Personas en Taller", 5825, 1523, "emerald")}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="glass rounded-[2rem] overflow-hidden border-white shadow-xl">
+                                    <div class="bg-slate-800 p-6 flex justify-between items-center text-white">
+                                        <h3 class="font-bold text-xl">Coberturas</h3>
+                                        <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left">
+                                            <thead class="bg-slate-50 border-b border-slate-100">
+                                                <tr class="text-[10px] uppercase text-slate-400 font-bold">
+                                                    <th class="px-6 py-4">Indicador</th>
+                                                    <th class="px-4 py-4 text-center">Meta</th>
+                                                    <th class="px-4 py-4 text-center">Ejec.</th>
+                                                    <th class="px-6 py-4 text-center">% Cumplimiento</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-sm divide-y divide-slate-100 bg-white">
+                                                ${generarFila("Vacantes", 20074, 1553, "indigo")}
+                                                ${generarFila("Colocados", 8942, 703, "purple")}
+                                                ${generarFila("Beneficios Económicos", 5506, 337, "blue")}
+                                                ${generarFila("Capacitaciones Asignadas", 13730, 2582, "emerald")}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <!-- // linea chevere -->
+                            <div class="h-[1px] w-full bg-gradient-to-r from-indigo-200 to-transparent"></div>
+                            <br>
+
+
+                            <div class="glass p-6 rounded-3xl border-white shadow-sm">
+                                <h4 class="font-bold text-slate-700 text-lg">METAS AL 7%</h4>
+                                <p class="text-sm text-slate-500">Consolidado anual de indicadores y coberturas.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                                
+                                <div class="glass rounded-[2rem] overflow-hidden border-white shadow-xl">
+                                    <div class="bg-indigo-600 p-6 flex justify-between items-center text-white">
+                                        <h3 class="font-bold text-xl">Indicadores</h3>
+                                        <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left">
+                                            <thead class="bg-slate-50 border-b border-slate-100">
+                                                <tr class="text-[10px] uppercase text-slate-400 font-bold">
+                                                    <th class="px-6 py-4">Indicador</th>
+                                                    <th class="px-4 py-4 text-center">Meta</th>
+                                                    <th class="px-4 py-4 text-center">Ejec.</th>
+                                                    <th class="px-6 py-4 text-center">% Cumplimiento</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-sm divide-y divide-slate-100 bg-white">
+                                                ${generarFila("Empleadores Nuevos", 407, 27, "indigo")}
+                                                ${generarFila("Remisiones", 102617, 10742, "purple")}
+                                                ${generarFila("Orientación", 5930, 1523, "blue")}
+                                                ${generarFila("Personas en Taller", 5930, 1523, "emerald")}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="glass rounded-[2rem] overflow-hidden border-white shadow-xl">
+                                    <div class="bg-slate-800 p-6 flex justify-between items-center text-white">
+                                        <h3 class="font-bold text-xl">Coberturas</h3>
+                                        <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left">
+                                            <thead class="bg-slate-50 border-b border-slate-100">
+                                                <tr class="text-[10px] uppercase text-slate-400 font-bold">
+                                                    <th class="px-6 py-4">Indicador</th>
+                                                    <th class="px-4 py-4 text-center">Meta</th>
+                                                    <th class="px-4 py-4 text-center">Ejec.</th>
+                                                    <th class="px-6 py-4 text-center">% Cumplimiento</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="text-sm divide-y divide-slate-100 bg-white">
+                                                ${generarFila("Vacantes", 20437, 1553, "indigo")}
+                                                ${generarFila("Colocados", 9104, 703, "purple")}
+                                                ${generarFila("Beneficios Económicos", 5606, 337, "blue")}
+                                                ${generarFila("Capacitaciones Asignadas", 13978, 2582, "emerald")}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    `;
+                    }
+                }
+
+
+        }   
+
+
+// <!-- LLAMADA INDICADORES Y COBERTURAS - SUBSECCIONES-->
+
+
+        function renderTablas(nombreSubseccion) {
+
+            const grid = document.getElementById('submenu-grid');
+            document.getElementById('section-title').innerText = nombreSubseccion;
+            
+            // Cambiamos el diseño de cuadrícula a una sola columna para la tabla
+            grid.className = "grid grid-cols-1 gap-4 w-full";
+            
+            if (nombreSubseccion === 'Indicadores') {
+                grid.innerHTML = `
+
+                    <div class="flex justify-start mb-2">
+                        <button onclick="showSection('Indicadores y Coberturas')" class="flex items-center gap-2 text-indigo-600 font-bold text-sm hover:text-indigo-800 transition-colors group">
+                            <div class="bg-indigo-100 p-2 rounded-lg group-hover:bg-indigo-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                </svg>
+                            </div>
+                            VOLVER A INDICADORES Y COBERTURAS
+                        </button>
+                    </div>
+
+
+                    <div class="glass p-6 rounded-3xl border-white shadow-sm">
+                        <h4 class="font-bold text-slate-700 text-lg">METAS AL 5.1% ➜ IPC 2026</h4>
+                        <p class="text-sm text-slate-500">Consolidado anual de indicadores y coberturas.</p>
+                    </div>
+
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl">
+                        <div class="bg-indigo-600 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-xl">Análisis Anual</h3>
+                                <p class="text-xs opacity-80">Seguimiento de Indicadores</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-[10px] uppercase tracking-widest text-slate-400 bg-slate-50 border-b border-slate-100">
+                                        <th class="px-8 py-5">Indicador</th>
+                                        <th class="px-4 py-5 text-center">Meta Anual</th>
+                                        <th class="px-4 py-5 text-center">Ejecución</th>
+                                        <th class="px-8 py-5 text-center">% Cumplimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-slate-100">
+                                    ${generarFila("Empleadores Nuevos", 399, 27, "indigo")}
+                                    ${generarFila("Remisiones", 100795, 10742, "purple")}
+                                    ${generarFila("Entrevistas de Orientación", 5825, 1523, "blue")}
+                                    ${generarFila("Personas en Taller", 5825, 1523, "emerald")}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl mt-6">
+                        <div class="bg-slate-800 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-lg">Análisis Mensual</h3>
+                                <p class="text-xs opacity-60">Seguimiento de Indicadores</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-100 text-[10px] uppercase text-slate-500 font-bold">
+                                    <tr class="border-b border-slate-200">
+                                        <th class="px-6 py-4 text-left sticky left-0 bg-slate-100 z-10" rowspan="2">Indicador</th>
+                                        ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map(mes => `
+                                            <th class="px-2 py-2 text-center border-r border-slate-200 bg-slate-50" colspan="3">${mes}</th>
+                                        `).join('')}
+                                        <th class="px-2 py-2 text-center border-l border-slate-300 bg-indigo-50" colspan="3">Total Anual</th>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        ${Array(12).fill(`
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Meta</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Ejec.</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100 text-indigo-500">%</th>
+                                        `).join('')}
+                                        <th class="px-1 py-2 text-center text-[7px] border-l border-slate-300 bg-indigo-50">Meta</th>
+                                        <th class="px-1 py-2 text-center text-[7px] bg-indigo-50">Ejec.</th>
+                                        <th class="px-1 py-2 text-center text-[7px] text-indigo-600 bg-indigo-50">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    ${generarFilaMensual("Empleadores Nuevos", [
+                                        {m: 30, e: 27}, // Ene
+                                        {m: 32, e: 0}, // Feb
+                                        {m: 32, e: 0},  // Mar 
+                                        {m: 37, e: 0}, // Abr
+                                        {m: 34, e: 0}, // May
+                                        {m: 38, e: 0},  // Jun 
+                                        {m: 38, e: 0}, // Jul
+                                        {m: 35, e: 0}, // Ago
+                                        {m: 37, e: 0},  // Sep 
+                                        {m: 33, e: 0}, // Oct
+                                        {m: 26, e: 0}, // Nov
+                                        {m: 27, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Remisiones", [                                        
+                                        {m: 15254, e: 10742}, // Ene
+                                        {m: 11066, e: 0}, // Feb
+                                        {m: 4642, e: 0},  // Mar 
+                                        {m: 4777, e: 0}, // Abr
+                                        {m: 3103, e: 0}, // May
+                                        {m: 3838, e: 0},  // Jun 
+                                        {m: 12221, e: 0}, // Jul
+                                        {m: 9050, e: 0}, // Ago
+                                        {m: 15342, e: 0},  // Sep 
+                                        {m: 11160, e: 0}, // Oct
+                                        {m: 6858, e: 0}, // Nov
+                                        {m: 3484, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Entrevistas de Orientación", [
+                                        {m: 396, e: 587}, // Ene
+                                        {m: 391, e: 936}, // Feb
+                                        {m: 504, e: 0},  // Mar 
+                                        {m: 601, e: 0}, // Abr
+                                        {m: 510, e: 0}, // May
+                                        {m: 462, e: 0},  // Jun 
+                                        {m: 508, e: 0}, // Jul
+                                        {m: 483, e: 0}, // Ago
+                                        {m: 449, e: 0},  // Sep 
+                                        {m: 490, e: 0}, // Oct
+                                        {m: 447, e: 0}, // Nov
+                                        {m: 584, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Personas en Taller", [                                        
+                                        {m: 396, e: 587}, // Ene
+                                        {m: 391, e: 936}, // Feb
+                                        {m: 504, e: 0},  // Mar 
+                                        {m: 601, e: 0}, // Abr
+                                        {m: 510, e: 0}, // May
+                                        {m: 462, e: 0},  // Jun 
+                                        {m: 508, e: 0}, // Jul
+                                        {m: 483, e: 0}, // Ago
+                                        {m: 449, e: 0},  // Sep 
+                                        {m: 490, e: 0}, // Oct
+                                        {m: 447, e: 0}, // Nov
+                                        {m: 584, e: 0},  // Dic
+                                    ])}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- // linea chevere -->
+                    <br>
+                    <div class="h-[1px] w-full bg-gradient-to-r from-indigo-200 to-transparent"></div>
+                    <br>
+
+                    <div class="glass p-6 rounded-3xl border-white shadow-sm">
+                        <h4 class="font-bold text-slate-700 text-lg">METAS AL 7%</h4>
+                        <p class="text-sm text-slate-500">Consolidado anual de indicadores y coberturas.</p>
+                    </div>
+
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl">
+                        <div class="bg-indigo-600 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-xl">Análisis Anual</h3>
+                                <p class="text-xs opacity-80">Seguimiento de Indicadores</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-[10px] uppercase tracking-widest text-slate-400 bg-slate-50 border-b border-slate-100">
+                                        <th class="px-8 py-5">Indicador</th>
+                                        <th class="px-4 py-5 text-center">Meta Anual</th>
+                                        <th class="px-4 py-5 text-center">Ejecución</th>
+                                        <th class="px-8 py-5 text-center">% Cumplimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-slate-100">
+                                    ${generarFila("Empleadores Nuevos", 399, 27, "indigo")}
+                                    ${generarFila("Remisiones", 100795, 10742, "purple")}
+                                    ${generarFila("Entrevistas de Orientación", 5825, 1523, "blue")}
+                                    ${generarFila("Personas en Taller", 5825, 1523, "emerald")}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl mt-6">
+                        <div class="bg-slate-800 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-lg">Análisis Mensual</h3>
+                                <p class="text-xs opacity-60">Seguimiento de Indicadores</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-100 text-[10px] uppercase text-slate-500 font-bold">
+                                    <tr class="border-b border-slate-200">
+                                        <th class="px-6 py-4 text-left sticky left-0 bg-slate-100 z-10" rowspan="2">Indicador</th>
+                                        ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map(mes => `
+                                            <th class="px-2 py-2 text-center border-r border-slate-200 bg-slate-50" colspan="3">${mes}</th>
+                                        `).join('')}
+                                            <th class="px-2 py-2 text-center border-l border-slate-300 bg-indigo-50" colspan="3">Total Anual</th>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        ${Array(12).fill(`
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Meta</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Ejec.</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100 text-indigo-500">%</th>
+                                        `).join('')}
+                                        <th class="px-1 py-2 text-center text-[7px] border-l border-slate-300 bg-indigo-50">Meta</th>
+                                        <th class="px-1 py-2 text-center text-[7px] bg-indigo-50">Ejec.</th>
+                                        <th class="px-1 py-2 text-center text-[7px] text-indigo-600 bg-indigo-50">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    ${generarFilaMensual("Empleadores Nuevos", [
+                                        {m: 30, e: 27}, // Ene
+                                        {m: 32, e: 0}, // Feb
+                                        {m: 32, e: 0},  // Mar 
+                                        {m: 37, e: 0}, // Abr
+                                        {m: 34, e: 0}, // May
+                                        {m: 38, e: 0},  // Jun 
+                                        {m: 38, e: 0}, // Jul
+                                        {m: 35, e: 0}, // Ago
+                                        {m: 37, e: 0},  // Sep 
+                                        {m: 33, e: 0}, // Oct
+                                        {m: 26, e: 0}, // Nov
+                                        {m: 27, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Remisiones", [                                        
+                                        {m: 15254, e: 10742}, // Ene
+                                        {m: 11066, e: 0}, // Feb
+                                        {m: 4642, e: 0},  // Mar 
+                                        {m: 4777, e: 0}, // Abr
+                                        {m: 3103, e: 0}, // May
+                                        {m: 3838, e: 0},  // Jun 
+                                        {m: 12221, e: 0}, // Jul
+                                        {m: 9050, e: 0}, // Ago
+                                        {m: 15342, e: 0},  // Sep 
+                                        {m: 11160, e: 0}, // Oct
+                                        {m: 6858, e: 0}, // Nov
+                                        {m: 3484, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Entrevistas de Orientación", [
+                                        {m: 396, e: 587}, // Ene
+                                        {m: 391, e: 936}, // Feb
+                                        {m: 504, e: 0},  // Mar 
+                                        {m: 601, e: 0}, // Abr
+                                        {m: 510, e: 0}, // May
+                                        {m: 462, e: 0},  // Jun 
+                                        {m: 508, e: 0}, // Jul
+                                        {m: 483, e: 0}, // Ago
+                                        {m: 449, e: 0},  // Sep 
+                                        {m: 490, e: 0}, // Oct
+                                        {m: 447, e: 0}, // Nov
+                                        {m: 584, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Personas en Taller", [                                        
+                                        {m: 396, e: 587}, // Ene
+                                        {m: 391, e: 936}, // Feb
+                                        {m: 504, e: 0},  // Mar 
+                                        {m: 601, e: 0}, // Abr
+                                        {m: 510, e: 0}, // May
+                                        {m: 462, e: 0},  // Jun 
+                                        {m: 508, e: 0}, // Jul
+                                        {m: 483, e: 0}, // Ago
+                                        {m: 449, e: 0},  // Sep 
+                                        {m: 490, e: 0}, // Oct
+                                        {m: 447, e: 0}, // Nov
+                                        {m: 584, e: 0},  // Dic
+                                    ])}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                `;
+            } else if (nombreSubseccion === 'Coberturas') {
+                grid.innerHTML = `
+
+
+                    <div class="flex justify-start mb-2">
+                        <button onclick="showSection('Indicadores y Coberturas')" class="flex items-center gap-2 text-indigo-600 font-bold text-sm hover:text-indigo-800 transition-colors group">
+                            <div class="bg-indigo-100 p-2 rounded-lg group-hover:bg-indigo-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                                </svg>
+                            </div>
+                            VOLVER A INDICADORES Y COBERTURAS
+                        </button>
+                    </div>
+
+                    <div class="glass p-6 rounded-3xl border-white shadow-sm">
+                        <h4 class="font-bold text-slate-700 text-lg">METAS AL 5.1% ➜ IPC 2026</h4>
+                        <p class="text-sm text-slate-500">Consolidado anual de indicadores y coberturas.</p>
+                    </div>
+                    
+                    <!--
+                    <div class="glass p-8 rounded-[2rem] text-center animate-fade-in">
+                        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.382V6.618a2 2 0 011.106-1.789l6-3a2 2 0 011.788 0l6 3A2 2 0 0119 6.618v8.764a2 2 0 01-1.106 1.789L12 20.382a2 2 0 01-1.788 0z"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Sección de Coberturas</h3>
+                        <p class="text-slate-500 max-w-md mx-auto">Aquí puedes incluir la tabla discriminada por municipios o sedes según tu Excel.</p>
+                    </div> 
+                    -->
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl">
+                        <div class="bg-indigo-600 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-xl">Análisis Anual</h3>
+                                <p class="text-xs opacity-80">Seguimiento de Coberturas</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-[10px] uppercase tracking-widest text-slate-400 bg-slate-50 border-b border-slate-100">
+                                        <th class="px-8 py-5">Indicador</th>
+                                        <th class="px-4 py-5 text-center">Meta Anual</th>
+                                        <th class="px-4 py-5 text-center">Ejecución</th>
+                                        <th class="px-8 py-5 text-center">% Cumplimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-slate-100">
+                                    ${generarFila("Vacantes", 20074, 1553, "indigo")}
+                                    ${generarFila("Colocados", 8942, 703, "purple")}
+                                    ${generarFila("Beneficios Económicos", 5506, 337, "blue")}
+                                    ${generarFila("Capacitaciones Asignadas", 13730, 2582, "emerald")}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl mt-6">
+                        <div class="bg-slate-800 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-lg">Análisis Mensual</h3>
+                                <p class="text-xs opacity-60">Seguimiento de Coberturas</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-100 text-[10px] uppercase text-slate-500 font-bold">
+                                    <tr class="border-b border-slate-200">
+                                        <th class="px-6 py-4 text-left sticky left-0 bg-slate-100 z-10" rowspan="2">Indicador</th>
+                                        ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map(mes => `
+                                            <th class="px-2 py-2 text-center border-r border-slate-200 bg-slate-50" colspan="3">${mes}</th>
+                                        `).join('')}
+                                            <th class="px-2 py-2 text-center border-l border-slate-300 bg-indigo-50" colspan="3">Total Anual</th>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        ${Array(12).fill(`
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Meta</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Ejec.</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100 text-indigo-500">%</th>
+                                        `).join('')}
+                                        <th class="px-1 py-2 text-center text-[7px] border-l border-slate-300 bg-indigo-50">Meta</th>
+                                        <th class="px-1 py-2 text-center text-[7px] bg-indigo-50">Ejec.</th>
+                                        <th class="px-1 py-2 text-center text-[7px] text-indigo-600 bg-indigo-50">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    ${generarFilaMensual("Vacantes", [
+                                        {m: 1498, e: 1553}, // Ene
+                                        {m: 1381, e: 0}, // Feb
+                                        {m: 1640, e: 0},  // Mar 
+                                        {m: 2157, e: 0}, // Abr
+                                        {m: 1747, e: 0}, // May
+                                        {m: 1826, e: 0},  // Jun 
+                                        {m: 1543, e: 0}, // Jul
+                                        {m: 1954, e: 0}, // Ago
+                                        {m: 1437, e: 0},  // Sep 
+                                        {m: 1755, e: 0}, // Oct
+                                        {m: 1905, e: 0}, // Nov
+                                        {m: 1231, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Colocados", [                                        
+                                        {m: 682, e: 703}, // Ene
+                                        {m: 743, e: 0}, // Feb
+                                        {m: 719, e: 0},  // Mar 
+                                        {m: 765, e: 0}, // Abr
+                                        {m: 751, e: 0}, // May
+                                        {m: 869, e: 0},  // Jun 
+                                        {m: 775, e: 0}, // Jul
+                                        {m: 849, e: 0}, // Ago
+                                        {m: 854, e: 0},  // Sep 
+                                        {m: 724, e: 0}, // Oct
+                                        {m: 616, e: 0}, // Nov
+                                        {m: 595, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Beneficios Económicos", [
+                                        {m: 419, e: 337}, // Ene
+                                        {m: 507, e: 0}, // Feb
+                                        {m: 610, e: 0},  // Mar 
+                                        {m: 501, e: 0}, // Abr
+                                        {m: 457, e: 0}, // May
+                                        {m: 472, e: 0},  // Jun 
+                                        {m: 477, e: 0}, // Jul
+                                        {m: 463, e: 0}, // Ago
+                                        {m: 405, e: 0},  // Sep 
+                                        {m: 446, e: 0}, // Oct
+                                        {m: 323, e: 0}, // Nov
+                                        {m: 426, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Capacitaciones Asignadas", [                                        
+                                        {m: 1067, e: 1353}, // Ene
+                                        {m: 921, e: 1229}, // Feb
+                                        {m: 1057, e: 0},  // Mar 
+                                        {m: 1244, e: 0}, // Abr
+                                        {m: 1301, e: 0}, // May
+                                        {m: 886, e: 0},  // Jun 
+                                        {m: 1327, e: 0}, // Jul
+                                        {m: 883, e: 0}, // Ago
+                                        {m: 1262, e: 0},  // Sep 
+                                        {m: 1307, e: 0}, // Oct
+                                        {m: 1051, e: 0}, // Nov
+                                        {m: 1424, e: 0},  // Dic
+                                    ])}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- // linea chevere -->
+                    <br>
+                    <div class="h-[1px] w-full bg-gradient-to-r from-indigo-200 to-transparent"></div>
+                    <br>
+
+
+
+                    <div class="glass p-6 rounded-3xl border-white shadow-sm">
+                        <h4 class="font-bold text-slate-700 text-lg">METAS AL 7%</h4>
+                        <p class="text-sm text-slate-500">Consolidado anual de indicadores y coberturas.</p>
+                    </div>
+
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl">
+                        <div class="bg-indigo-600 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-xl">Análisis Anual</h3>
+                                <p class="text-xs opacity-80">Seguimiento de Coberturas</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="text-[10px] uppercase tracking-widest text-slate-400 bg-slate-50 border-b border-slate-100">
+                                        <th class="px-8 py-5">Indicador</th>
+                                        <th class="px-4 py-5 text-center">Meta Anual</th>
+                                        <th class="px-4 py-5 text-center">Ejecución</th>
+                                        <th class="px-8 py-5 text-center">% Cumplimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-sm divide-y divide-slate-100">
+                                    ${generarFila("Vacantes", 20074, 1553, "indigo")}
+                                    ${generarFila("Colocados", 8942, 703, "purple")}
+                                    ${generarFila("Beneficios Económicos", 5506, 337, "blue")}
+                                    ${generarFila("Capacitaciones Asignadas", 13730, 2582, "emerald")}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+
+                    <div class="glass rounded-[2rem] overflow-hidden border-white animate-fade-in shadow-xl mt-6">
+                        <div class="bg-slate-800 p-6 flex justify-between items-center text-white">
+                            <div>
+                                <h3 class="font-bold text-lg">Análisis Mensual</h3>
+                                <p class="text-xs opacity-60">Seguimiento de Coberturas</p>
+                            </div>
+                            <span class="bg-white/20 px-4 py-1 rounded-full text-xs font-bold">2026</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-100 text-[10px] uppercase text-slate-500 font-bold">
+                                    <tr class="border-b border-slate-200">
+                                        <th class="px-6 py-4 text-left sticky left-0 bg-slate-100 z-10" rowspan="2">Indicador</th>
+                                        ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map(mes => `
+                                            <th class="px-2 py-2 text-center border-r border-slate-200 bg-slate-50" colspan="3">${mes}</th>
+                                        `).join('')}
+                                            <th class="px-2 py-2 text-center border-l border-slate-300 bg-indigo-50" colspan="3">Total Anual</th>
+                                    </tr>
+                                    <tr class="border-b border-slate-200">
+                                        ${Array(12).fill(`
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Meta</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100">Ejec.</th>
+                                            <th class="px-1 py-2 text-center text-[7px] border-r border-slate-100 text-indigo-500">%</th>
+                                        `).join('')}
+                                            <th class="px-1 py-2 text-center text-[7px] border-l border-slate-300 bg-indigo-50">Meta</th>
+                                            <th class="px-1 py-2 text-center text-[7px] bg-indigo-50">Ejec.</th>
+                                            <th class="px-1 py-2 text-center text-[7px] text-indigo-600 bg-indigo-50">%</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    ${generarFilaMensual("Vacantes", [
+                                        {m: 1498, e: 1553}, // Ene
+                                        {m: 1381, e: 0}, // Feb
+                                        {m: 1640, e: 0},  // Mar 
+                                        {m: 2157, e: 0}, // Abr
+                                        {m: 1747, e: 0}, // May
+                                        {m: 1826, e: 0},  // Jun 
+                                        {m: 1543, e: 0}, // Jul
+                                        {m: 1954, e: 0}, // Ago
+                                        {m: 1437, e: 0},  // Sep 
+                                        {m: 1755, e: 0}, // Oct
+                                        {m: 1905, e: 0}, // Nov
+                                        {m: 1231, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Colocados", [                                        
+                                        {m: 682, e: 703}, // Ene
+                                        {m: 743, e: 0}, // Feb
+                                        {m: 719, e: 0},  // Mar 
+                                        {m: 765, e: 0}, // Abr
+                                        {m: 751, e: 0}, // May
+                                        {m: 869, e: 0},  // Jun 
+                                        {m: 775, e: 0}, // Jul
+                                        {m: 849, e: 0}, // Ago
+                                        {m: 854, e: 0},  // Sep 
+                                        {m: 724, e: 0}, // Oct
+                                        {m: 616, e: 0}, // Nov
+                                        {m: 595, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Beneficios Económicos", [
+                                        {m: 419, e: 337}, // Ene
+                                        {m: 507, e: 0}, // Feb
+                                        {m: 610, e: 0},  // Mar 
+                                        {m: 501, e: 0}, // Abr
+                                        {m: 457, e: 0}, // May
+                                        {m: 472, e: 0},  // Jun 
+                                        {m: 477, e: 0}, // Jul
+                                        {m: 463, e: 0}, // Ago
+                                        {m: 405, e: 0},  // Sep 
+                                        {m: 446, e: 0}, // Oct
+                                        {m: 323, e: 0}, // Nov
+                                        {m: 426, e: 0},  // Dic
+                                    ])}
+                                    ${generarFilaMensual("Capacitaciones Asignadas", [                                        
+                                        {m: 1067, e: 1353}, // Ene
+                                        {m: 921, e: 1229}, // Feb
+                                        {m: 1057, e: 0},  // Mar 
+                                        {m: 1244, e: 0}, // Abr
+                                        {m: 1301, e: 0}, // May
+                                        {m: 886, e: 0},  // Jun 
+                                        {m: 1327, e: 0}, // Jul
+                                        {m: 883, e: 0}, // Ago
+                                        {m: 1262, e: 0},  // Sep 
+                                        {m: 1307, e: 0}, // Oct
+                                        {m: 1051, e: 0}, // Nov
+                                        {m: 1424, e: 0},  // Dic
+                                    ])}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                `;
+            }
+        }
+
+
+        function generarFila(nombre, meta, logro, color) {
+            let porcentajeRaw = (logro / meta) * 100;
+            let porcentajeFormateado = "";
+
+            if (logro > 0) {
+                porcentajeFormateado = porcentajeRaw.toFixed(1).replace('.', ',') + "%";
+            } else {
+                porcentajeRaw = 0;
+            }
+            const colores = {
+                indigo: "bg-indigo-500",
+                purple: "bg-purple-500",
+                blue: "bg-blue-500",
+                emerald: "bg-emerald-500",
+                amber: "bg-amber-500"
+            };
+
+            return `
+                <tr class="hover:bg-slate-50 transition-all group">
+                    <td class="px-8 py-5 font-bold text-slate-700">${nombre}</td>
+                    <td class="px-4 py-5 text-center text-slate-500 font-medium">${meta.toLocaleString()}</td>
+                    <td class="px-4 py-5 text-center font-bold text-slate-800">${logro === 0 ? "" : logro.toLocaleString()}</td>
+                    <td class="px-8 py-5">
+                        <div class="flex items-center justify-end gap-4">
+                            <div class="flex-1 bg-slate-100 rounded-full h-2.5 min-w-[120px] overflow-hidden">
+                                <div class="${colores[color]} h-full rounded-full transition-all duration-1000" style="width: ${porcentajeRaw}%"></div>
+                            </div>
+                                <span class="font-black text-slate-700 w-14 text-right">${porcentajeFormateado}</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function generarFilaMensual(nombre, datos) {
+
+            let totalMeta = 0;
+            let totalEjec = 0;
+
+            const celdasMeses = datos.map(mes => {
+
+                totalMeta += mes.m;
+                totalEjec += mes.e;
+
+                let porc = "";
+                let colorPorcentaje = "text-red-600";
+
+                if (mes.e > 0 && mes.m > 0) {
+
+                    const valor = (mes.e / mes.m) * 100;
+
+                    if (valor >= 100) {
+                        colorPorcentaje = "text-emerald-600";
+                    }
+
+                    if (valor < 100) {
+                        porc = valor.toFixed(1).replace('.', ',') + "%";
+                    } else {
+                        porc = valor.toFixed(0) + "%";
+                    }
+                }
+
+                return `
+                    <td class="px-1 py-3 text-center text-slate-400 border-r border-slate-50">
+                        ${mes.m === 0 ? "" : mes.m.toLocaleString()}
+                    </td>
+
+                    <td class="px-1 py-3 text-center font-medium text-slate-700 border-r border-slate-50">
+                        ${mes.e === 0 ? "" : mes.e.toLocaleString()}
+                    </td>
+
+                    <td class="px-1 py-3 text-center font-bold ${colorPorcentaje} border-r border-slate-100 bg-indigo-50/30">
+                        ${porc}
+                    </td>
+                `;
+            }).join('');
+
+            let porcTotal = "";
+            let colorTotal = "text-red-600";
+
+            if (totalMeta > 0 && totalEjec > 0) {
+
+                const valorTotal = (totalEjec / totalMeta) * 100;
+
+                if (valorTotal >= 100) {
+                    colorTotal = "text-emerald-600";
+                }
+
+                if (valorTotal < 100) {
+                    porcTotal = valorTotal.toFixed(1).replace('.', ',') + "%";
+                } else {
+                    porcTotal = valorTotal.toFixed(0) + "%";
+                }
+            }
+
+            return `
+                <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100 text-[10px]">
+
+                    <td class="px-6 py-4 font-bold text-slate-700 sticky left-0 bg-white border-r border-slate-200 shadow-sm">
+                        ${nombre}
+                    </td>
+
+                    ${celdasMeses}
+
+                    <td class="px-2 py-3 text-center font-medium border-l border-slate-200 bg-indigo-50">
+                        ${totalMeta === 0 ? "" : totalMeta.toLocaleString()}
+                    </td>
+
+                    <td class="px-2 py-3 text-center font-bold bg-indigo-50">
+                        ${totalEjec === 0 ? "" : totalEjec.toLocaleString()}
+                    </td>
+
+                    <td class="px-2 py-3 text-center font-black ${colorTotal} bg-indigo-50">
+                        ${porcTotal}
+                    </td>
+
+                </tr>
+            `;
+        }
+
+
+
+
+
+
+// <!-- LLAMADA DE PRESUPUESTO - SUBSECCIONES -->
+
+        const budgetData = [
+            { nombre: "POLIZA HYC AGENCIA", valor: 232473094, meta: 300000000 },
+            { nombre: "PRESTACIONES", valor: 1025154250, meta: 1200000000 },
+            { nombre: "SEGURIDAD SOCIAL", valor: 458508855, meta: 500000000 },
+            { nombre: "SALARIOS", valor: 2067063368, meta: 2500000000 },
+            { nombre: "HONORARIOS", valor: 321239227, meta: 400000000 },
+            { nombre: "ARRIENDOS", valor: 1473034552, meta: 1600000000 },
+            { nombre: "DIVERSOS", valor: 772646308, meta: 900000000 }
+            // Puedes agregar el resto de las cuentas aquí siguiendo el mismo formato
+        ];
+
+
+        function renderPresupuesto() {
+            document.getElementById('section-title').innerText = "Presupuesto";
+            const grid = document.getElementById('submenu-grid');
+            // Quitamos el grid del contenedor principal para manejar las secciones adentro
+            grid.className = "w-full pb-10"; 
+            grid.innerHTML = '';
+
+            const favoritos = getFavoritos();
+            const budgetDataCompleto = [
+                { nombre: "POLIZA HYC AGENCIA", valor: 0, meta: 232473094 },
+                { nombre: "PRESTACIONES", valor: 199000000, meta: 1025154250 },
+                { nombre: "SEGURIDAD SOCIAL", valor: 0, meta: 458508855 },
+                { nombre: "SALARIOS", valor: 0, meta: 2067063368 },
+                { nombre: "HONORARIOS", valor: 0, meta: 321239227 },
+                { nombre: "ARRIENDOS", valor: 0, meta: 1473034552 },
+                { nombre: "SEGUROS", valor: 0, meta: 23229964 },
+                { nombre: "SERVICIOS PUBLICOS", valor: 0, meta: 180471617 },
+                { nombre: "MANTENIMIENTO", valor: 0, meta: 57102334 },                
+                { nombre: "GASTOS UNIDAD MOVIL", valor: 0, meta: 187682553 },                
+                { nombre: "GASTOS DE VIAJES", valor: 0, meta: 29670672 },                
+                { nombre: "PUBLICIDAD", valor: 0, meta: 152727300 },                
+                { nombre: "GASTOS DE PAPELERIA", valor: 0, meta: 250000 },                
+                { nombre: "SERVICIO DE RESTAURA", valor: 0, meta: 9940000 },                
+                { nombre: "TAXIS Y BUSES", valor: 0, meta: 13464128 },                
+                { nombre: "DIVERSOS", valor: 0, meta: 772646308 }
+            ];
+
+            // Separamos los datos
+            const listaFavoritos = budgetDataCompleto.filter(item => favoritos.includes(item.nombre));
+            const listaResto = budgetDataCompleto.filter(item => !favoritos.includes(item.nombre));
+
+            // Función interna para generar el HTML de una tarjeta
+            const crearCard = (item, isFav, index) => {
+                const porcentaje = Math.min((item.valor / item.meta) * 100, 100);
+                const dashArray = 157; 
+                const dashOffset = dashArray - (dashArray * porcentaje) / 100;
+                const colores = ['#f97316', '#3b82f6', '#a855f7', '#10b981'];
+                const color = colores[Math.abs(item.nombre.length) % colores.length];
+
+                return `
+                    <div onclick="verDetalleCuenta('${item.nombre}')" class="card-budget animate-reorder glass p-8 rounded-[3rem] border-white shadow-lg flex flex-col items-center hover:shadow-2xl transition-all duration-300 cursor-pointer hover:scale-[1.02] relative ${isFav ? 'border-2 border-indigo-200 shadow-indigo-100' : ''}">
+                        <button onclick="toggleFavorito(event, '${item.nombre}')" class="absolute top-6 right-8 text-2xl transition-transform hover:scale-125 z-10">
+                            ${isFav ? '⭐' : '☆'}
+                        </button>
+                        <h4 class="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-6 text-center h-10 flex items-center pr-6">${item.nombre}</h4>
+                        <div class="relative flex items-center justify-center w-full">
+                            <svg class="w-64 h-36" viewBox="0 0 120 70">
+                                <path d="M 10 60 A 50 50 0 0 1 110 60" fill="none" stroke="#f1f5f9" stroke-width="14" stroke-linecap="round"/>
+                                <path d="M 10 60 A 50 50 0 0 1 110 60" fill="none" stroke="${color}" stroke-width="14" 
+                                    stroke-linecap="round" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}"
+                                    style="transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1)"/>
+                            </svg>
+                            <div class="absolute bottom-4 text-center w-full px-4">
+                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Ejecutado</p>
+                                <span class="text-xl font-black text-slate-800 tracking-tighter">$${item.valor.toLocaleString('es-CO')}</span>
+                            </div>
+                        </div>
+                        <div class="w-full mt-6 flex justify-between items-center border-t border-slate-100 pt-6">
+                            <div>
+                                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter">Presupuesto Total</p>
+                                <p class="text-lg font-bold text-slate-600">$${item.meta.toLocaleString('es-CO')}</p>
+                            </div>
+                            <div class="bg-slate-50 px-4 py-2 rounded-2xl shadow-inner">
+                                <span class="text-xl font-black" style="color: ${color}">${porcentaje.toFixed(1)}%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            // Renderizar Sección Favoritos si existen
+            if (listaFavoritos.length > 0) {
+                grid.innerHTML += `
+                    <div class="mb-12">
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="text-xl">⭐</span>
+                            <h3 class="text-lg font-black text-slate-700 uppercase tracking-widest">Cuentas Contables Favoritas</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                            ${listaFavoritos.map(item => crearCard(item, true)).join('')}
+                        </div>
+                    </div>
+                    <div class="separator-line"></div>
+                `;
+            }
+
+            // Renderizar Sección General
+            grid.innerHTML += `
+                <div class="mt-8">
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-xl">📊</span>
+                        <h3 class="text-lg font-black text-slate-700 uppercase tracking-widest">Cuentas Contables</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                        ${listaResto.map(item => crearCard(item, false)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+
+
+        function verDetalleCuenta(nombreCuenta) {
+            const grid = document.getElementById('submenu-grid');
+            document.getElementById('section-title').innerText = "Detalle: " + nombreCuenta;
+            
+            // Cambiamos el grid a una sola columna para la tabla
+            grid.className = "w-full overflow-x-auto bg-white rounded-3xl p-6 shadow-xl animate-fade-in";
+            
+            // Aquí podrías filtrar tus datos reales. Por ahora generamos filas de ejemplo:
+            grid.innerHTML = `
+                <div class="flex justify-between items-center mb-6">
+                    <button onclick="renderPresupuesto()" class="text-indigo-600 font-bold flex items-center gap-2 hover:underline">
+                        ← Volver al Presupuesto
+                    </button>
+                    <span class="bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-xs font-black uppercase">Registros 2026</span>
+                </div>
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b-2 border-slate-100 text-[10px] text-slate-400 uppercase tracking-widest">
+                            <th class="py-4 px-4">Fecha</th>
+                            <th class="py-4 px-4">Descripción / Concepto</th>
+                            <th class="py-4 px-4">Referencia</th>
+                            <th class="py-4 px-4 text-right">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-slate-600">
+                        ${generarFilasDetalle(nombreCuenta)}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Función auxiliar para crear filas de ejemplo (luego la conectas a tu base de datos)
+        function generarFilasDetalle(cuenta) {
+            let filas = "";
+            // Simulamos 5 movimientos por cuenta
+            for(let i = 1; i <= 5; i++) {
+                filas += `
+                    <tr class="border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                        <td class="py-4 px-4 text-xs">0${i}/03/2026</td>
+                        <td class="py-4 px-4 font-medium italic">Pago correspondiente a ${cuenta.toLowerCase()} - Período Marzo</td>
+                        <td class="py-4 px-4 text-xs font-mono text-slate-400">REF-00${i}82</td>
+                        <td class="py-4 px-4 text-right font-bold text-slate-700">$${(Math.random() * 1000000).toLocaleString('es-CO')}</td>
+                    </tr>
+                `;
+            }
+            return filas;
+        }
+
+
+        function getFavoritos() {
+            const favs = localStorage.getItem('cuentas_favoritas');
+            return favs ? JSON.parse(favs) : [];
+        }
+
+        function toggleFavorito(event, nombreCuenta) {
+            event.stopPropagation();
+            let favs = getFavoritos();
+            const card = event.currentTarget.closest('.card-budget'); // Usaremos esta clase ahora
+            
+            // 1. Animación de feedback inmediato en la tarjeta
+            if (!favs.includes(nombreCuenta)) {
+                event.currentTarget.innerText = '⭐';
+                favs.push(nombreCuenta);
+            } else {
+                event.currentTarget.innerText = '☆';
+                favs = favs.filter(f => f !== nombreCuenta);
+            }
+
+            // 2. Breve pausa para que el ojo note el cambio de estado antes del movimiento
+            localStorage.setItem('cuentas_favoritas', JSON.stringify(favs));
+            
+            // Aplicamos una salida suave antes de reordenar
+            const grid = document.getElementById('submenu-grid');
+            grid.style.opacity = "0.5";
+            grid.style.transition = "opacity 0.2s";
+
+            setTimeout(() => {
+                renderPresupuesto();
+                grid.style.opacity = "1";
+            }, 300); 
+        }
+
+
+
+
+
+
+// <!-- LLAMADA DE CALIDAD - SUBSECCIONES -->
+
+
+
+
+    // <!-- LLAMADA DE CALIDAD - SUBSECCIONES: SALIDAS NO CONFORME -->
+
+        function navegacionCalidad(subSeccion) {
+            if (subSeccion === 'Salidas no Conforme') {
+                // Ejecuta la función especial de gráficas y tabla resumen que creamos
+                renderSalidasNoConforme(); 
+            } else {
+                // Para 'Auditorías' o 'Mejora Continua', usa la función de tablas normal
+                renderTablas(subSeccion); 
+                console.log("Cargando sección estándar de calidad:", subSeccion);
+            }
+        }
+
+
+
+        function renderSalidasNoConforme() {
+            const grid = document.getElementById('submenu-grid');
+            document.getElementById('section-title').innerText = "Salidas no Conforme";
+            
+            // Datos: Si un mes no tiene valor o es 0, lo dejamos como 0 internamente para el cálculo
+            const dataSalidas = [
+                { area: "Gestión Empresarial", nombre: "Información errada de vacantes publicadas", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Gestión Empresarial", nombre: "No publicación de vacantes por olvido u omisión", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ] },
+                { area: "Gestión Empresarial", nombre: "No registro de empresa por olvido u omisión", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Orientación Laboral", nombre: "Error en la evaluación de ruta de empleabilidad", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Orientación Laboral", nombre: "Asignación de beneficio a empresas sin requisitos", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Orientación Laboral", nombre: "Insatisfacción en capacitación sugerida", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Orientación Laboral", nombre: "Error en citas programadas", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Orientación Laboral", nombre: "No asignación de capacitación otorgada al Oferente", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Orientación Laboral", nombre: "Error en la asignación de capacitación al Oferente", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Intermediación Laboral", nombre: "Remisión de hojas de vida no ajustadas al perfil", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Intermediación Laboral", nombre: "Vacantes a destiempo", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Unidad Movil", nombre: "Incumplimiento u omisión de actividades asignadas", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                { area: "Unidad Movil", nombre: "Incumplimiento a planeación del cronograma", meses: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+            ];
+
+            const totalesMensuales = Array(12).fill(0);
+            dataSalidas.forEach(d => d.meses.forEach((v, i) => totalesMensuales[i] += v));
+
+            let html = `
+                <div class="col-span-full mb-8 flex flex-col gap-6">
+                    <button onclick="showSection('Calidad')" class="group w-fit flex items-center gap-2 bg-white/50 hover:bg-slate-900 hover:text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-sm border border-white">
+                        <svg class="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Volver a Calidad
+                    </button>
+
+                    <div class="glass rounded-[2rem] overflow-hidden border border-white shadow-xl animate-fade-in">
+                        <div class="bg-slate-800 p-4 flex justify-between items-center text-white">
+                            <h3 class="font-bold text-xs uppercase tracking-widest px-2">Resumen Consolidado de Salidas</h3>
+                            <span class="bg-indigo-500 px-3 py-1 rounded-lg text-[10px] font-black">TOTAL 2026: ${totalesMensuales.reduce((a, b) => a + b, 0)}</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-[10px] text-left border-collapse">
+                                <thead class="bg-slate-100 border-b border-slate-200 sticky top-0 z-10">
+                                    <tr class="text-slate-500 font-black uppercase italic font-serif">
+                                        <th class="px-6 py-3 border-r border-slate-200">Ítem</th>
+                                        <th class="px-6 py-3 border-r border-slate-200">Proceso</th>
+                                        <th class="px-6 py-3 border-r border-slate-200">Salidas no Conformes</th>
+                                        ${['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'].map(m => `<th class="px-2 py-3 text-center border-r border-slate-200">${m}</th>`).join('')}
+                                        <th class="px-4 py-3 text-center bg-indigo-50 text-indigo-700">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 bg-white">
+                                    ${dataSalidas.map((item, idx) => `
+                                        <tr class="hover:bg-slate-50 transition-colors">
+                                            <td class="px-6 py-2 text-center border-r border-slate-100 font-bold text-slate-400">${idx + 1}</td>
+                                            <td class="px-6 py-2 border-r border-slate-100 font-semibold text-slate-600">${item.area}</td>
+                                            <td class="px-6 py-2 border-r border-slate-100 text-slate-500 italic">${item.nombre}</td>
+                                            ${item.meses.map(v => `
+                                                <td class="px-2 py-2 text-center border-r border-slate-50 ${v > 0 ? 'font-black text-indigo-600 bg-indigo-50/30' : ''}">
+                                                    ${v > 0 ? v : ''} 
+                                                </td>
+                                            `).join('')}
+                                            <td class="px-4 py-2 text-center font-black bg-slate-50 text-slate-800">${item.meses.reduce((a, b) => a + b, 0) || ''}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                                <tfoot class="bg-slate-900 text-white font-black uppercase italic">
+                                    <tr>
+                                        <td colspan="3" class="px-6 py-3 text-right">Totales Mensuales</td>
+                                        ${totalesMensuales.map(t => `<td class="px-2 py-3 text-center border-r border-white/10">${t > 0 ? t : ''}</td>`).join('')}
+                                        <td class="px-4 py-3 text-center bg-indigo-600">${totalesMensuales.reduce((a, b) => a + b, 0) || ''}</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            grid.className = "grid grid-cols-1 lg:grid-cols-2 gap-8 w-full pb-10";
+            let areaActual = '';
+
+            dataSalidas.forEach((item) => {
+                if (item.area !== areaActual) {
+                    areaActual = item.area;
+                    html += `
+                        <div class="col-span-full mt-6 mb-2 flex items-center gap-4 animate-fade-in">
+                            <h3 class="text-indigo-600 font-black text-[10px] uppercase tracking-[0.3em] whitespace-nowrap">${areaActual}</h3>
+                            <div class="h-[1px] w-full bg-gradient-to-r from-indigo-200 to-transparent"></div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="glass p-8 rounded-[2.5rem] border border-white/60 shadow-xl animate-fade-in flex flex-col h-full hover:shadow-2xl transition-all duration-500 group">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="max-w-[70%]">
+                                <h4 class="text-xs font-black text-slate-700 uppercase leading-relaxed tracking-tight group-hover:text-indigo-600 transition-colors">
+                                    ${item.nombre}
+                                </h4>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[9px] text-slate-400 font-bold uppercase tracking-tighter italic">Acumulado</p>
+                                <p class="text-2xl font-black text-slate-800 leading-none mt-1">
+                                    ${item.meses.reduce((a, b) => a + b, 0) || 0}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-grow flex items-end h-32 gap-1.5 px-2 mb-6 border-b border-slate-100">
+                            ${item.meses.map((valor, i) => {
+                                const altura = (valor / (Math.max(...item.meses) || 1)) * 100;
+                                return `
+                                    <div class="flex-grow group/bar relative flex flex-col justify-end h-full">
+                                        ${valor > 0 ? `
+                                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[9px] font-bold px-1.5 py-0.5 rounded opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none z-10">
+                                            ${valor}
+                                        </div>` : ''}
+                                        <div class="w-full ${valor > 0 ? 'bg-indigo-500/20 group-hover/bar:bg-indigo-600' : 'bg-slate-100'} rounded-t-md transition-all duration-300" 
+                                            style="height: ${valor > 0 ? altura : '2'}%">
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        
+                        <div class="flex justify-between px-1 text-[8px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                            <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+                            <span>Jul</span><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dic</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // Función auxiliar para crear las barras con alturas proporcionales
+        function generarBarrasTendencia(meses) {
+            const max = Math.max(...meses, 1); // Evitar división por cero
+            return meses.map(valor => {
+                const altura = (valor / max) * 100;
+                return `
+                    <div class="flex-grow group relative flex flex-col justify-end h-full">
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            ${valor}
+                        </div>
+                        <div class="w-full bg-indigo-500/20 rounded-t-lg group-hover:bg-indigo-500 transition-all duration-500" 
+                            style="height: ${altura}%">
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+
+        function goHome() {
+            document.getElementById('home-content').classList.remove('hidden');
+            document.getElementById('dynamic-content').classList.add('hidden');
+            document.getElementById('section-title').innerText = "Panel Principal";
+            
+            // Restaurar el grid original de 3 columnas
+            const grid = document.getElementById('submenu-grid');
+            grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4";
+        }
+
+    </script>
+</body>
+</html>
